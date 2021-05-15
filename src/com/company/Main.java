@@ -23,6 +23,7 @@ public class Main {
             System.exit(-1);
         }
         JFrame gameFrame = new JFrame();
+        gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         gameFrame.setSize(new Dimension(800, 800));
         BoardPanel boardPanel = new BoardPanel(true);
         gameFrame.setContentPane(boardPanel);
