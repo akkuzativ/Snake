@@ -6,7 +6,9 @@ import java.util.Arrays;
 enum BoardTile {
     EMPTY,
     SNAKE,
+    SNAKE_HEAD,
     ENEMY_SNAKE,
+    ENEMY_SNAKE_HEAD,
     FROG,
     FRUIT,
     OBSTACLE
@@ -25,6 +27,14 @@ public class Board {
     public Board(int width, int height) {
         this.width = width;
         this.height = height;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 
     private boolean IsOutOfBounds(Coordinates coordinates) {
@@ -110,7 +120,7 @@ public class Board {
         }
 
         if (this.snake != null) {
-            tiles[snake.getSnakeHead().x][snake.getSnakeHead().y] = BoardTile.SNAKE;
+            tiles[snake.getSnakeHead().x][snake.getSnakeHead().y] = BoardTile.SNAKE_HEAD;
             ArrayList<Coordinates> snakeBody = snake.getSnakeBody();
             for (Coordinates snakeTile: snakeBody) {
                 tiles[snakeTile.x][snakeTile.y] = BoardTile.SNAKE;
@@ -118,7 +128,7 @@ public class Board {
         }
 
         if (this.enemySnake != null) {
-            tiles[enemySnake.getSnakeHead().x][enemySnake.getSnakeHead().y] = BoardTile.ENEMY_SNAKE;
+            tiles[enemySnake.getSnakeHead().x][enemySnake.getSnakeHead().y] = BoardTile.ENEMY_SNAKE_HEAD;
             ArrayList<Coordinates> enemySnakeBody = enemySnake.getSnakeBody();
             for (Coordinates enemySnakeTile: enemySnakeBody) {
                 tiles[enemySnakeTile.x][enemySnakeTile.y] = BoardTile.ENEMY_SNAKE;
