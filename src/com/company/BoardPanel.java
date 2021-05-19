@@ -10,9 +10,9 @@ public class BoardPanel extends JPanel{
     private HashMap<BoardTile, Color> colorMapping = new HashMap<>() {{
         put(BoardTile.EMPTY, Color.BLACK);
         put(BoardTile.SNAKE, Color.CYAN);
-        put(BoardTile.SNAKE_HEAD, Color.BLUE);
-        put(BoardTile.ENEMY_SNAKE, Color.PINK);
-        put(BoardTile.ENEMY_SNAKE_HEAD, Color.RED);
+        put(BoardTile.SNAKE_HEAD, Color.ORANGE);
+        put(BoardTile.ENEMY_SNAKE, Color.MAGENTA);
+        put(BoardTile.ENEMY_SNAKE_HEAD, Color.PINK);
         put(BoardTile.OBSTACLE, Color.WHITE);
         put(BoardTile.FRUIT, Color.GREEN);
         put(BoardTile.FROG, Color.YELLOW);
