@@ -5,7 +5,7 @@ import java.awt.*;
 
 public class Main {
     public static void main(String[] args) {
-        BoardGenerator boardGenerator = new BoardGenerator(30, 30, 1,2, 10, 20, 3);
+        BoardGenerator boardGenerator = new BoardGenerator(20, 20, 1,2, 5, 10, 3);
         try {
             Board board = boardGenerator.generateBoard();
             JFrame gameFrame = new JFrame();
