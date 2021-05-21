@@ -56,45 +56,34 @@ public class BoardGenerator {
         return generateUnoccupiedCoordinatesAndMarkAsOccupied(0, this.boardWidth, 0, this.boardHeight);
     }
 
-    Board generateBoard() throws TileOutOfBoundsException {
-        Board generatedBoard = new Board(this.boardWidth, this.boardHeight);
-
-        try {
-            for (int i = 0; i < this.obstaclesCount; i++) {
-                int segmentLength = this.minObstacleLength + rand.nextInt(this.maxObstacleLength - this.minObstacleLength);
-                ArrayList<Coordinates> obstacleSegment = generateLineSegment(segmentLength, getRandomDirection());
-                for (Coordinates segmentCoordinate : obstacleSegment) {
-                    generatedBoard.addObstacle(segmentCoordinate);
-                    this.occupiedTiles[segmentCoordinate.x][segmentCoordinate.y] = true;
-                }
-            }
-            for (int i = 0; i < this.fruitCount; i++) {
-                Fruit fruit = new Fruit(generateUnoccupiedCoordinatesAndMarkAsOccupied());
-                generatedBoard.addFruit(fruit);
-            }
-        }
-        catch (TileOutOfBoundsException e) {
-            System.out.println("Out of boards bounds");
-            System.exit(-1);
-        }
-
-        Frog frog = new Frog(generateUnoccupiedCoordinatesAndMarkAsOccupied());
-
+    Snake generateSnake() {
         Direction snakeDirection = getRandomDirection();
         ArrayList<Coordinates> snakeSegment = generateLineSegment(this.snakeLength, snakeDirection);
         Coordinates snakeHead = snakeSegment.get(0);
         snakeSegment.remove(0);
-        Snake snake = new Snake(snakeSegment, snakeHead, snakeDirection);
+        return new Snake(snakeSegment, snakeHead, snakeDirection);
+    }
 
-        Direction enemySnakeDirection = getRandomDirection();
-        ArrayList<Coordinates> enemySnakeSegment = generateLineSegment(this.snakeLength, enemySnakeDirection);
-        Coordinates enemySnakeHead = enemySnakeSegment.get(0);
-        enemySnakeSegment.remove(0);
-        Snake enemySnake = new Snake(enemySnakeSegment, enemySnakeHead, enemySnakeDirection);
+    Board generateBoard() throws TileOutOfBoundsException {
+        Board generatedBoard = new Board(this.boardWidth, this.boardHeight);
+        Frog frog = new Frog(generateUnoccupiedCoordinatesAndMarkAsOccupied());
 
-        generatedBoard.setSnake(snake);
+        for (int i = 0; i < this.fruitCount; i++) {
+            Fruit fruit = new Fruit(generateUnoccupiedCoordinatesAndMarkAsOccupied());
+            generatedBoard.addFruit(fruit);
+        }
+        for (int i = 0; i < this.obstaclesCount; i++) {
+            int segmentLength = this.minObstacleLength + rand.nextInt(this.maxObstacleLength - this.minObstacleLength);
+            ArrayList<Coordinates> obstacleSegment = generateLineSegment(segmentLength, getRandomDirection());
+            for (Coordinates segmentCoordinate : obstacleSegment) {
+                generatedBoard.addObstacle(segmentCoordinate);
+                this.occupiedTiles[segmentCoordinate.x][segmentCoordinate.y] = true;
+            }
+        }
+
+        generatedBoard.setSnake(generateSnake());
+        generatedBoard.setEnemySnake(generateSnake());
         generatedBoard.setFrog(frog);
-        generatedBoard.setEnemySnake(enemySnake);
         return generatedBoard;
     }
 
@@ -114,36 +103,42 @@ public class BoardGenerator {
         return deltas;
     }
 
-    ArrayList<Coordinates> generateLineSegment(int segmentLength, Direction direction) throws TileOutOfBoundsException {
+
+    boolean areCoordinatesNotInBounds(Coordinates coordinates, int margin) {
+        return coordinates.x < margin || coordinates.x >= this.boardWidth - margin ||
+                coordinates.y < margin || coordinates.y >= this.boardHeight - margin;
+    }
+
+    boolean areAllCoordinatesFree(Coordinates startingPoint, Coordinates endPoint, int margin) {
+        if (areCoordinatesNotInBounds(startingPoint, margin) || areCoordinatesNotInBounds(endPoint, margin)) {
+            return false;
+        }
+
+        for (int i = Math.min(startingPoint.x, endPoint.x) - margin; i <= Math.max(startingPoint.x, endPoint.x) + margin; i++) {
+            for (int j = Math.min(startingPoint.y, endPoint.y) - margin; j <= Math.max(startingPoint.y, endPoint.y) + margin; j++) {
+                if (this.occupiedTiles[i][j]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    ArrayList<Coordinates> generateLineSegment(int segmentLength, Direction direction) {
         ArrayList<Coordinates> outputCoordinates = new ArrayList<>();
-        Coordinates startingPoint;
-        int[] deltas;
-        deltas = getDeltas(direction);
+        int[] deltas = getDeltas(direction);
         int deltaX = deltas[0];
         int deltaY = deltas[1];
-        int[] segmentXBounds = {2, this.boardWidth - 2};
-        int[] segmentYBounds = {2, this.boardHeight - 2};
         boolean isRoomForSegment = false;
 
         while (!isRoomForSegment) {
-            int segmentCount = 0;
-            startingPoint = generateUnoccupiedCoordinates(segmentXBounds[0], segmentXBounds[1], segmentYBounds[0], segmentYBounds[1]);
-            int endingX = startingPoint.x + deltaX * (segmentLength - 1);
-            int endingY = startingPoint.y + deltaY * (segmentLength - 1);
+            Coordinates startingPoint = generateUnoccupiedCoordinates();
+            Coordinates endPoint = new Coordinates(startingPoint.x + deltaX * (segmentLength - 1),
+                                                   startingPoint.y + deltaY * (segmentLength - 1));
 
-            if (endingX < segmentXBounds[0] || endingX >= segmentXBounds[1] ||
-                endingY < segmentYBounds[0] || endingY >= segmentYBounds[1]) {
-                continue;
-            }
+            isRoomForSegment = areAllCoordinatesFree(startingPoint, endPoint, 2);
 
-            for (int i = 0; i < segmentLength; i++) {
-                if (!this.occupiedTiles[startingPoint.x + deltaX * i][startingPoint.y + deltaY * i]) {
-                    segmentCount++;
-                }
-            }
-
-            if (segmentCount == segmentLength) {
-                isRoomForSegment = true;
+            if (isRoomForSegment) {
                 for (int i = 0; i < segmentLength; i++) {
                     Coordinates coordinates = new Coordinates(startingPoint.x + deltaX * i, startingPoint.y + deltaY * i);
                     outputCoordinates.add(coordinates);
