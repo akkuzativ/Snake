@@ -7,7 +7,7 @@ import java.util.HashMap;
 
 
 public class BoardPanel extends JPanel{
-    private HashMap<BoardTile, Color> colorMapping = new HashMap<>() {{
+    private final HashMap<BoardTile, Color> colorMapping = new HashMap<>() {{
         put(BoardTile.EMPTY, Color.BLACK);
         put(BoardTile.SNAKE, Color.CYAN);
         put(BoardTile.SNAKE_HEAD, Color.ORANGE);
@@ -16,6 +16,9 @@ public class BoardPanel extends JPanel{
         put(BoardTile.OBSTACLE, Color.WHITE);
         put(BoardTile.FRUIT, Color.GREEN);
         put(BoardTile.FROG, Color.YELLOW);
+    }};
+    private final HashMap<BoardTile, Shape> shapeMapping = new HashMap<>() {{
+
     }};
     boolean drawGrid;
     private Board currentBoard;
