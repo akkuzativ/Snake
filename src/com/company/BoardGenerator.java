@@ -27,11 +27,11 @@ public class BoardGenerator {
         this.snakeLength = snakeLength;
     }
 
-    void markCoordinatesAsOccupied(Coordinates coordinate) {
+    private void markCoordinatesAsOccupied(Coordinates coordinate) {
         this.occupiedTiles[coordinate.x][coordinate.y] = true;
     }
 
-    Coordinates generateUnoccupiedCoordinates(int minX, int maxX, int minY, int maxY) {
+    private Coordinates generateUnoccupiedCoordinates(int minX, int maxX, int minY, int maxY) {
         int xCoordinate = minX + this.rand.nextInt(maxX - minX);
         int yCoordinate = minY + this.rand.nextInt(maxY - minY);
 
@@ -42,29 +42,32 @@ public class BoardGenerator {
         return new Coordinates(xCoordinate, yCoordinate);
     }
 
-    Coordinates generateUnoccupiedCoordinates() {
+    private Coordinates generateUnoccupiedCoordinates() {
         return generateUnoccupiedCoordinates(0, this.boardWidth, 0, this.boardHeight);
     }
 
-    Coordinates generateUnoccupiedCoordinatesAndMarkAsOccupied(int minX, int maxX, int minY, int maxY) {
+    private Coordinates generateUnoccupiedCoordinatesAndMarkAsOccupied(int minX, int maxX, int minY, int maxY) {
         Coordinates coordinates = generateUnoccupiedCoordinates(minX, maxX, minY, maxY);
         markCoordinatesAsOccupied(coordinates);
         return coordinates;
     }
 
-    Coordinates generateUnoccupiedCoordinatesAndMarkAsOccupied() {
+    private Coordinates generateUnoccupiedCoordinatesAndMarkAsOccupied() {
         return generateUnoccupiedCoordinatesAndMarkAsOccupied(0, this.boardWidth, 0, this.boardHeight);
     }
 
-    Snake generateSnake() {
+    private Snake generateSnake() {
         Direction snakeDirection = getRandomDirection();
         ArrayList<Coordinates> snakeSegment = generateLineSegment(this.snakeLength, snakeDirection);
         Coordinates snakeHead = snakeSegment.get(0);
+        for (Coordinates segmentCoordinate : snakeSegment) {
+            this.occupiedTiles[segmentCoordinate.x][segmentCoordinate.y] = true;
+        }
         snakeSegment.remove(0);
         return new Snake(snakeSegment, snakeHead, snakeDirection);
     }
 
-    Board generateBoard() throws TileOutOfBoundsException {
+    public Board generateBoard() throws TileOutOfBoundsException {
         Board generatedBoard = new Board(this.boardWidth, this.boardHeight);
         Frog frog = new Frog(generateUnoccupiedCoordinatesAndMarkAsOccupied());
 
@@ -87,12 +90,12 @@ public class BoardGenerator {
         return generatedBoard;
     }
 
-    Direction getRandomDirection() {
+    private Direction getRandomDirection() {
         Direction[] directions = Direction.values();
         return directions[this.rand.nextInt(directions.length)];
     }
 
-    int[] getDeltas(Direction direction) {
+    private int[] getDeltas(Direction direction) {
         int[] deltas = new int[2];
         switch (direction) {
             case UP -> deltas[1] = -1;
@@ -104,12 +107,12 @@ public class BoardGenerator {
     }
 
 
-    boolean areCoordinatesNotInBounds(Coordinates coordinates, int margin) {
+    private boolean areCoordinatesNotInBounds(Coordinates coordinates, int margin) {
         return coordinates.x < margin || coordinates.x >= this.boardWidth - margin ||
                 coordinates.y < margin || coordinates.y >= this.boardHeight - margin;
     }
 
-    boolean areAllCoordinatesFree(Coordinates startingPoint, Coordinates endPoint, int margin) {
+    private boolean areAllCoordinatesFree(Coordinates startingPoint, Coordinates endPoint, int margin) {
         if (areCoordinatesNotInBounds(startingPoint, margin) || areCoordinatesNotInBounds(endPoint, margin)) {
             return false;
         }
@@ -124,7 +127,7 @@ public class BoardGenerator {
         return true;
     }
 
-    ArrayList<Coordinates> generateLineSegment(int segmentLength, Direction direction) {
+    private ArrayList<Coordinates> generateLineSegment(int segmentLength, Direction direction) {
         ArrayList<Coordinates> outputCoordinates = new ArrayList<>();
         int[] deltas = getDeltas(direction);
         int deltaX = deltas[0];

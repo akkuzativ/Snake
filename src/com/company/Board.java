@@ -22,7 +22,7 @@ public class Board {
     private Snake snake;
     private Snake enemySnake;
     private ArrayList<Fruit> fruits = new ArrayList<>();
-    private ArrayList<Coordinates> obstacles = new ArrayList<>();
+    private final ArrayList<Coordinates> obstacles = new ArrayList<>();
     private Frog frog;
 
     public Board(int width, int height) {
