@@ -36,6 +36,8 @@ public class GameFrame extends JFrame implements ActionListener {
                 try {
                     board = boardGenerator.generateBoard();
                     boardPanel.setCurrentBoard(board);
+                    SnakeAI snakeAI = new SnakeAI(board);
+                    System.out.println(snakeAI.getNextMoveDirection());
                 } catch (TileOutOfBoundsException exception) {
                     System.out.println("Invalid board generated");
                     return;
