@@ -9,6 +9,8 @@ public class Settings {
     private final int minObstacleLength;
     private final int maxObstacleLength;
 
+    private final int gameSpeed;
+
     Settings(){
         this.boardWidth = 0;
         this.boardHeight = 0;
@@ -17,5 +19,7 @@ public class Settings {
         this.snakeLength = 0;
         this.minObstacleLength = 0;
         this.maxObstacleLength = 0;
+
+        this.gameSpeed = 0;
     }
 }
