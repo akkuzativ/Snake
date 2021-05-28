@@ -30,6 +30,7 @@ public class GameFrame extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        JPanel panelToDisplay = null;
         switch (e.getActionCommand()){
             case "START":
                 System.out.println("start");
@@ -42,21 +43,15 @@ public class GameFrame extends JFrame implements ActionListener {
                     System.out.println("Invalid board generated");
                     return;
                 }
-                setContentPane(boardPanel);
-                revalidate();
-                repaint();
+                panelToDisplay = boardPanel;
                 break;
             case "SETTINGS":
                 System.out.println("settings");
-                setContentPane(settingsPanel);
-                revalidate();
-                repaint();
+                panelToDisplay = settingsPanel;
                 break;
             case "HIGH_SCORE":
                 System.out.println("high_score");
-                setContentPane(highScorePanel);
-                revalidate();
-                repaint();
+                panelToDisplay = highScorePanel;
                 break;
             case "QUIT":
                 System.out.println("quit");
@@ -64,11 +59,15 @@ public class GameFrame extends JFrame implements ActionListener {
                 break;
             case "MENU":
                 System.out.println("menu");
-                setContentPane(menuPanel);
-                revalidate();
-                repaint();
+                panelToDisplay = menuPanel;
                 break;
             default:
+        }
+        if (panelToDisplay != null)
+        {
+            setContentPane(panelToDisplay);
+            revalidate();
+            repaint();
         }
     }
 }
