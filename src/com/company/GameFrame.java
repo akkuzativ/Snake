@@ -14,6 +14,7 @@ public class GameFrame extends JFrame implements ActionListener {
     final GameOverPanel gameOverPanel = new GameOverPanel(this);
     final HighScorePanel highScorePanel = new HighScorePanel(this);
     Board board;
+    GameLoop gameLoop;
     BoardGenerator boardGenerator = new BoardGenerator(30, 30, 1,2,
             10, 20, 3);
 
@@ -33,10 +34,11 @@ public class GameFrame extends JFrame implements ActionListener {
         JPanel panelToDisplay = null;
         switch (e.getActionCommand()){
             case "START":
-                System.out.println("start");
                 try {
                     board = boardGenerator.generateBoard();
-                    boardPanel.setCurrentBoard(board);
+                    gameLoop = new GameLoop(board, boardPanel, this);
+                    setContentPane(boardPanel);
+                    gameLoop.start();
                     SnakeAI snakeAI = new SnakeAI(board);
                     System.out.println(snakeAI.getNextMoveDirection());
                 } catch (TileOutOfBoundsException exception) {
@@ -44,21 +46,18 @@ public class GameFrame extends JFrame implements ActionListener {
                     return;
                 }
                 panelToDisplay = boardPanel;
+
                 break;
             case "SETTINGS":
-                System.out.println("settings");
                 panelToDisplay = settingsPanel;
                 break;
             case "HIGH_SCORE":
-                System.out.println("high_score");
                 panelToDisplay = highScorePanel;
                 break;
             case "QUIT":
-                System.out.println("quit");
                 dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
                 break;
             case "MENU":
-                System.out.println("menu");
                 panelToDisplay = menuPanel;
                 break;
             default:

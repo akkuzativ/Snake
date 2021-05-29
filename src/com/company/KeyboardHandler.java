@@ -4,7 +4,7 @@ import java.awt.event.*;
 import java.util.HashMap;
 
 
-public abstract class KeyboardHandler implements KeyListener {
+public class KeyboardHandler implements KeyListener {
     enum KeyCommand {
         UP,
         DOWN,
@@ -14,11 +14,11 @@ public abstract class KeyboardHandler implements KeyListener {
         NOTHING
     }
     private KeyCommand recentlyPressedKey;
-    private HashMap<Integer, KeyCommand> keyCodeMapping = new HashMap<>(){{
-        put(224, KeyCommand.UP);
-        put(225, KeyCommand.DOWN);
-        put(226, KeyCommand.LEFT);
-        put(227, KeyCommand.RIGHT);
+    private final HashMap<Integer, KeyCommand> keyCodeMapping = new HashMap<>(){{
+        put(38, KeyCommand.UP);
+        put(40, KeyCommand.DOWN);
+        put(37, KeyCommand.LEFT);
+        put(39, KeyCommand.RIGHT);
         put(27, KeyCommand.ESC);
     }};
 
@@ -37,8 +37,12 @@ public abstract class KeyboardHandler implements KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
-        if (keyCodeMapping.get(e.getKeyCode()) == recentlyPressedKey) {
+        if (recentlyPressedKey == keyCodeMapping.get(e.getKeyCode())) {
             recentlyPressedKey = KeyCommand.NOTHING;
         }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
     }
 }
