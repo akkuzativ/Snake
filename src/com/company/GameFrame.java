@@ -5,7 +5,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
-import java.util.Arrays;
 
 public class GameFrame extends JFrame implements ActionListener {
     final MenuPanel menuPanel = new MenuPanel(this);
@@ -36,8 +35,13 @@ public class GameFrame extends JFrame implements ActionListener {
                 try {
                     board = boardGenerator.generateBoard();
                     boardPanel.setCurrentBoard(board);
+
+                    FrogAI frogAI = new FrogAI(board);
+                    System.out.println(frogAI.getNextMoveDirection());
+
                     SnakeAI snakeAI = new SnakeAI(board);
                     System.out.println(snakeAI.getNextMoveDirection());
+
                 } catch (TileOutOfBoundsException exception) {
                     System.out.println("Invalid board generated");
                     return;
