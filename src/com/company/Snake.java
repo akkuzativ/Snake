@@ -40,6 +40,10 @@ public class Snake {
         this.moveDirection = moveDirection;
     }
 
+    public Direction getMoveDirection() {
+        return moveDirection;
+    }
+
     private Direction getOppositeDirection(Direction direction) {
         return switch (direction) {
             case UP -> Direction.DOWN;

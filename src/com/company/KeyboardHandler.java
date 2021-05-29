@@ -1,6 +1,7 @@
 package com.company;
 
 import java.awt.event.*;
+import java.security.Key;
 import java.util.HashMap;
 
 
@@ -30,6 +31,8 @@ public class KeyboardHandler implements KeyListener {
         return recentlyPressedKey;
     }
 
+    public void flushRecentlyPressedKey() { recentlyPressedKey = KeyCommand.NOTHING;}
+
     @Override
     public void keyPressed(KeyEvent e) {
         recentlyPressedKey = keyCodeMapping.get(e.getKeyCode());
@@ -37,9 +40,6 @@ public class KeyboardHandler implements KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
-        if (recentlyPressedKey == keyCodeMapping.get(e.getKeyCode())) {
-            recentlyPressedKey = KeyCommand.NOTHING;
-        }
     }
 
     @Override

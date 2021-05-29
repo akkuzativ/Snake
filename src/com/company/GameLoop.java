@@ -1,13 +1,14 @@
 package com.company;
 
+import java.util.Locale;
+
 public class GameLoop extends Thread{
     final Board board;
     final BoardPanel boardPanel;
-    int maxFPS;
+    int targetFPS = 60;
     boolean notPaused;
     boolean gameOver;
     int currentScore;
-    Settings settings;
     KeyboardHandler keyboardHandler;
     GameFrame gameFrame;
 
@@ -28,23 +29,20 @@ public class GameLoop extends Thread{
     private void processInput() {
         switch (keyboardHandler.getRecentlyPressedKey()) {
             case UP:
-                System.out.println("up");
                 break;
             case DOWN:
-                System.out.println("down");
                 break;
             case LEFT:
-                System.out.println("left");
                 break;
             case RIGHT:
-                System.out.println("right");
                 break;
             case ESC:
-                System.out.println("esc");
                 break;
             default:
                 break;
         }
+        System.out.println(keyboardHandler.getRecentlyPressedKey().toString().toLowerCase(Locale.ROOT));
+        keyboardHandler.flushRecentlyPressedKey();
     }
 
     void updateState() {
