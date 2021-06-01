@@ -24,10 +24,12 @@ public class SnakeController {
         Direction moveDirection = snake.getMoveDirection();
         for (int i = 0; i < snakeBody.size(); i++ ) {
             if (i == 0) {
-                snakeBody.set(i, snakeHead);
+                snakeBody.get(i).x = snakeHead.x;
+                snakeBody.get(i).y = snakeHead.y;
             }
             else {
-                snakeBody.set(i, snakeBody.get(i - 1));
+                snakeBody.get(i).x = snakeBody.get(i - 1).x;
+                snakeBody.get(i).y = snakeBody.get(i - 1).y;
             }
         }
         snakeHead.x += getDeltas(moveDirection)[0];
@@ -40,14 +42,15 @@ public class SnakeController {
         Direction moveDirection = snake.getMoveDirection();
         for (int i = 0; i < snakeBody.size(); i++ ) {
             if (i == 0) {
-                snakeBody.set(i, snakeHead);
+                snakeBody.get(i).x = snakeHead.x;
+                snakeBody.get(i).y = snakeHead.y;
             }
             else if (i != snakeBody.size() - 1) {
-                snakeBody.set(i, snakeBody.get(i - 1));
+                snakeBody.get(i).x = snakeBody.get(i - 1).x;
+                snakeBody.get(i).y = snakeBody.get(i - 1).y;
             }
         }
         snakeHead.x += getDeltas(moveDirection)[0];
         snakeHead.y += getDeltas(moveDirection)[1];
     }
-
 }

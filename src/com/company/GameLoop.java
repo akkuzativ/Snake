@@ -1,6 +1,6 @@
 package com.company;
 
-import java.util.Locale;
+import java.util.ArrayList;
 
 public class GameLoop extends Thread{
     final Board board;
@@ -11,6 +11,13 @@ public class GameLoop extends Thread{
     int currentScore;
     KeyboardHandler keyboardHandler;
     GameFrame gameFrame;
+    SnakeController snakeController;
+
+    Snake snake;
+    Snake enemySnake;
+    Frog frog;
+    ArrayList<Fruit> fruits;
+    ArrayList<Coordinates> obstacles;
 
     GameLoop(Board board, BoardPanel boardPanel, GameFrame gameFrame){
         this.board = board;
@@ -24,38 +31,56 @@ public class GameLoop extends Thread{
         this.gameFrame.addKeyListener(keyboardHandler);
 
         this.gameFrame.setFocusable(true);
+
+        this.snakeController = new SnakeController();
+
+        this.snake = board.getSnake();
+        this.enemySnake = board.getEnemySnake();
+        this.frog = board.getFrog();
+        this.fruits = board.getFruits();
     }
 
     private void processInput() {
+        Direction newDirection = snake.getMoveDirection();
         switch (keyboardHandler.getRecentlyPressedKey()) {
             case UP:
+                newDirection = Direction.UP;
                 break;
             case DOWN:
+                newDirection = Direction.DOWN;
                 break;
             case LEFT:
+                newDirection = Direction.LEFT;
                 break;
             case RIGHT:
+                newDirection = Direction.RIGHT;
                 break;
             case ESC:
+                notPaused = !notPaused;
                 break;
             default:
                 break;
         }
-        System.out.println(keyboardHandler.getRecentlyPressedKey().toString().toLowerCase(Locale.ROOT));
+        if (notPaused) {
+            try {
+                snake.setMoveDirection(newDirection);
+            }
+            catch (IncorrectDirectionException e) {
+            }
+        }
         keyboardHandler.flushRecentlyPressedKey();
     }
 
-    void updateState() {
-
+    private void updateState() {
+        snakeController.normalMove(snake);
+        //snakeController.normalMove(enemySnake);
     }
 
     private void render() {
-        this.boardPanel.revalidate();
-        this.boardPanel.repaint();
+        this.boardPanel.setCurrentBoard(board);
 
         this.gameFrame.revalidate();
         this.gameFrame.repaint();
-
     }
 
     public void run() {
@@ -74,7 +99,6 @@ public class GameLoop extends Thread{
                 break;
             }
 
-
             // !!!!!!!!!!!!!!!!!!!
             // TODO
             try {
@@ -83,7 +107,6 @@ public class GameLoop extends Thread{
             catch (Exception e) {
             }
             // !!!!!!!!!!!!!!!!!!!
-
 
         }
     }

@@ -1,8 +1,8 @@
 package com.company;
 
 import java.awt.event.*;
-import java.security.Key;
 import java.util.HashMap;
+import java.util.Objects;
 
 
 public class KeyboardHandler implements KeyListener {
@@ -35,7 +35,7 @@ public class KeyboardHandler implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        recentlyPressedKey = keyCodeMapping.get(e.getKeyCode());
+        recentlyPressedKey = Objects.requireNonNullElse(keyCodeMapping.get(e.getKeyCode()), KeyCommand.NOTHING);
     }
 
     @Override
