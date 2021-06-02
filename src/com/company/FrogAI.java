@@ -2,19 +2,20 @@ package com.company;
 
 import java.util.ArrayList;
 
-public class SnakeAI {
+public class FrogAI {
     private Board board;
 
-    SnakeAI(Board board) {
+    FrogAI(Board board) {
         this.board = board;
     }
 
     public Direction getNextMoveDirection() {
         BFSalgorithm bfs = new BFSalgorithm(board);
-        ArrayList<Coordinates> path = bfs.getShortestPathToFrogOrFruit(this.board.getEnemySnake().getSnakeHead());
+        ArrayList<Coordinates> path = bfs.getLongestFrogPath(bfs.createFrogMatrix());
         Coordinates nextMove = path.get(1);
-        Coordinates currentPosition = board.getEnemySnake().getSnakeHead();
+        Coordinates currentPosition = board.getFrog().getCoordinates();
         int[] deltas = {nextMove.x - currentPosition.x, nextMove.y - currentPosition.y};
+        System.out.println("Frog deltas: " + deltas[0] + " " + deltas[1]);
 
         if (deltas[0] == 0 && deltas[1] == -1) {
             return Direction.UP;
