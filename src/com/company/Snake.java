@@ -2,13 +2,6 @@ package com.company;
 
 import java.util.ArrayList;
 
-enum Direction {
-    UP,
-    DOWN,
-    LEFT,
-    RIGHT
-}
-
 class IncorrectDirectionException extends Exception {}
 
 public class Snake {

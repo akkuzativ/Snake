@@ -83,7 +83,6 @@ public class BoardGenerator {
                 this.occupiedTiles[segmentCoordinate.x][segmentCoordinate.y] = true;
             }
         }
-
         generatedBoard.setSnake(generateSnake());
         generatedBoard.setEnemySnake(generateSnake());
         generatedBoard.setFrog(frog);
@@ -94,18 +93,6 @@ public class BoardGenerator {
         Direction[] directions = Direction.values();
         return directions[this.rand.nextInt(directions.length)];
     }
-
-    private int[] getDeltas(Direction direction) {
-        int[] deltas = new int[2];
-        switch (direction) {
-            case UP -> deltas[1] = -1;
-            case DOWN -> deltas[1] = 1;
-            case LEFT -> deltas[0] = -1;
-            case RIGHT -> deltas[0] = 1;
-        }
-        return deltas;
-    }
-
 
     private boolean areCoordinatesNotInBounds(Coordinates coordinates, int margin) {
         return coordinates.x < margin || coordinates.x >= this.boardWidth - margin ||
@@ -129,7 +116,7 @@ public class BoardGenerator {
 
     private ArrayList<Coordinates> generateLineSegment(int segmentLength, Direction direction) {
         ArrayList<Coordinates> outputCoordinates = new ArrayList<>();
-        int[] deltas = getDeltas(direction);
+        int[] deltas = DirectionConverter.getDeltas(direction);
         int deltaX = deltas[0];
         int deltaY = deltas[1];
         boolean isRoomForSegment = false;
