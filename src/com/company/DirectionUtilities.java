@@ -1,5 +1,7 @@
 package com.company;
 
+import java.util.Random;
+
 enum Direction {
     UP,
     DOWN,
@@ -7,7 +9,9 @@ enum Direction {
     RIGHT
 }
 
- public class DirectionConverter {
+class IncorrectDirectionException extends Exception {}
+
+ public class DirectionUtilities {
     public static int[] getDeltas(Direction direction) {
         int[] deltas = new int[2];
         switch (direction) {
@@ -30,4 +34,19 @@ enum Direction {
             return Direction.RIGHT;
         }
     }
+
+     public static Direction getRandomDirection() {
+         Random rand = new Random();
+         Direction[] directions = Direction.values();
+         return directions[rand.nextInt(directions.length)];
+     }
+
+     public static Direction getOppositeDirection(Direction direction) {
+         return switch (direction) {
+             case UP -> Direction.DOWN;
+             case DOWN -> Direction.UP;
+             case LEFT -> Direction.RIGHT;
+             case RIGHT -> Direction.LEFT;
+         };
+     }
 }

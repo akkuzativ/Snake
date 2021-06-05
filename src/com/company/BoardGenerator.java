@@ -57,7 +57,7 @@ public class BoardGenerator {
     }
 
     private Snake generateSnake() {
-        Direction snakeDirection = getRandomDirection();
+        Direction snakeDirection = DirectionUtilities.getRandomDirection();
         ArrayList<Coordinates> snakeSegment = generateLineSegment(this.snakeLength, snakeDirection);
         Coordinates snakeHead = snakeSegment.get(0);
         for (Coordinates segmentCoordinate : snakeSegment) {
@@ -77,7 +77,7 @@ public class BoardGenerator {
         }
         for (int i = 0; i < this.obstaclesCount; i++) {
             int segmentLength = this.minObstacleLength + rand.nextInt(this.maxObstacleLength - this.minObstacleLength);
-            ArrayList<Coordinates> obstacleSegment = generateLineSegment(segmentLength, getRandomDirection());
+            ArrayList<Coordinates> obstacleSegment = generateLineSegment(segmentLength, DirectionUtilities.getRandomDirection());
             for (Coordinates segmentCoordinate : obstacleSegment) {
                 generatedBoard.addObstacle(segmentCoordinate);
                 this.occupiedTiles[segmentCoordinate.x][segmentCoordinate.y] = true;
@@ -87,11 +87,6 @@ public class BoardGenerator {
         generatedBoard.setEnemySnake(generateSnake());
         generatedBoard.setFrog(frog);
         return generatedBoard;
-    }
-
-    private Direction getRandomDirection() {
-        Direction[] directions = Direction.values();
-        return directions[this.rand.nextInt(directions.length)];
     }
 
     private boolean areCoordinatesNotInBounds(Coordinates coordinates, int margin) {
@@ -116,7 +111,7 @@ public class BoardGenerator {
 
     private ArrayList<Coordinates> generateLineSegment(int segmentLength, Direction direction) {
         ArrayList<Coordinates> outputCoordinates = new ArrayList<>();
-        int[] deltas = DirectionConverter.getDeltas(direction);
+        int[] deltas = DirectionUtilities.getDeltas(direction);
         int deltaX = deltas[0];
         int deltaY = deltas[1];
         boolean isRoomForSegment = false;

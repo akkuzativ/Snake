@@ -2,7 +2,7 @@ package com.company;
 
 import java.util.ArrayList;
 
-public class SnakeAI {
+public class SnakeAI implements AI {
     private Board board;
 
     SnakeAI(Board board) {
@@ -15,6 +15,6 @@ public class SnakeAI {
         Coordinates nextMove = path.get(1);
         Coordinates currentPosition = board.getEnemySnake().getSnakeHead();
         int[] deltas = {nextMove.x - currentPosition.x, nextMove.y - currentPosition.y};
-        return DirectionConverter.getDirection(deltas);
+        return DirectionUtilities.getDirection(deltas);
     }
 }

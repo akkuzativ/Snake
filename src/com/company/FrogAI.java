@@ -2,7 +2,7 @@ package com.company;
 
 import java.util.ArrayList;
 
-public class FrogAI {
+public class FrogAI implements AI {
     private Board board;
 
     FrogAI(Board board) {
@@ -15,7 +15,6 @@ public class FrogAI {
         Coordinates nextMove = path.get(1);
         Coordinates currentPosition = board.getFrog().getCoordinates();
         int[] deltas = {nextMove.x - currentPosition.x, nextMove.y - currentPosition.y};
-        System.out.println("Frog deltas: " + deltas[0] + " " + deltas[1]);
-        return DirectionConverter.getDirection(deltas);
+        return DirectionUtilities.getDirection(deltas);
     }
 }
