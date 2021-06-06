@@ -23,7 +23,7 @@ public class Board {
     private Snake enemySnake;
     private ArrayList<Fruit> fruits = new ArrayList<>();
     private final ArrayList<Coordinates> obstacles = new ArrayList<>();
-    private Frog frog = null;
+    private ArrayList<Frog> frogs = new ArrayList<>();
 
     public Board(int width, int height) {
         this.width = width;
@@ -76,15 +76,24 @@ public class Board {
         this.enemySnake = enemySnake;
     }
 
-    public Frog getFrog() {
-        return this.frog;
+    public ArrayList<Frog> getFrogs() {
+        return this.frogs;
     }
 
-    public void setFrog(Frog frog) throws TileOutOfBoundsException{
+    public void setFrogs(ArrayList<Frog> frogs) throws TileOutOfBoundsException{
+        for (Frog frog: frogs) {
+            if (IsOutOfBounds(frog.getCoordinates())) {
+                throw new TileOutOfBoundsException();
+            }
+        }
+        this.frogs = frogs;
+    }
+
+    public void addFrog(Frog frog) throws TileOutOfBoundsException{
         if (IsOutOfBounds(frog.getCoordinates())) {
             throw new TileOutOfBoundsException();
         }
-        this.frog = frog;
+        this.frogs.add(frog);
     }
 
     public void addFruit(Fruit fruit) throws TileOutOfBoundsException{
@@ -142,8 +151,10 @@ public class Board {
             }
         }
 
-        if (this.frog != null){
-            tiles[frog.getCoordinates().x][frog.getCoordinates().y] = BoardTile.FROG;
+        if (!this.frogs.isEmpty()){
+            for (Frog frog: this.frogs) {
+                tiles[frog.getCoordinates().x][frog.getCoordinates().y] = BoardTile.FROG;
+            }
         }
 
         if (!this.fruits.isEmpty()){

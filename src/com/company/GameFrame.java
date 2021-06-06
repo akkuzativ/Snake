@@ -14,8 +14,6 @@ public class GameFrame extends JFrame implements ActionListener {
     final HighScorePanel highScorePanel = new HighScorePanel(this);
     Board board;
     GameLoop gameLoop;
-    BoardGenerator boardGenerator = new BoardGenerator(30, 30, 1,2,
-            10, 20, 3);
 
     GameFrame(Dimension size) {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -34,17 +32,23 @@ public class GameFrame extends JFrame implements ActionListener {
         switch (e.getActionCommand()){
             case "START":
                 try {
+                    int fruitCount = 3;
+                    int frogCount = 2;
+                    BoardGenerator boardGenerator = new BoardGenerator(30, 30, fruitCount, frogCount,2,
+                                                          10, 20, 3);
                     board = boardGenerator.generateBoard();
                     gameLoop = new GameLoop(board, boardPanel, this);
                     setContentPane(boardPanel);
                     gameLoop.start();
                     boardPanel.setCurrentBoard(board);
-                    FrogAI frogAI = new FrogAI(board);
-                    System.out.println(frogAI.getNextMoveDirection());
+                    for (Frog frog: this.board.getFrogs()) {
+                        FrogAI frogAI = new FrogAI(board, frog);
+                        System.out.println("frogAI: " + frogAI.getNextMoveDirection());
+                    }
                     SnakeAI snakeAI = new SnakeAI(board);
-                    System.out.println(snakeAI.getNextMoveDirection());
-                    FruitsAndFrogGenerator fruitsAndFrogGenerator = new FruitsAndFrogGenerator(board, 5);
-                    fruitsAndFrogGenerator.generateFruitsAndFrog();
+                    System.out.println("snakeAI: " + snakeAI.getNextMoveDirection());
+                    FruitsAndFrogsGenerator fruitsAndFrogsGenerator = new FruitsAndFrogsGenerator(board, fruitCount, frogCount);
+                    fruitsAndFrogsGenerator.generateFruitsAndFrogs();
                 } catch (TileOutOfBoundsException exception) {
                     System.out.println("Invalid board generated");
                     return;

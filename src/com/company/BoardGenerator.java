@@ -8,19 +8,21 @@ public class BoardGenerator {
     private final int boardWidth;
     private final int boardHeight;
     private final int fruitCount;
+    private final int frogCount;
     private final int obstaclesCount;
     private final int snakeLength;
     private final int minObstacleLength;
     private final int maxObstacleLength;
     private final Random rand;
 
-    BoardGenerator(int boardWidth, int boardHeight, int fruitCount, int obstaclesCount,
+    BoardGenerator(int boardWidth, int boardHeight, int fruitCount, int frogCount, int obstaclesCount,
                    int minObstacleLength, int maxObstacleLength, int snakeLength) {
         this.rand = new Random();
         this.occupiedTiles = new boolean[boardWidth][boardHeight];
         this.boardWidth = boardWidth;
         this.boardHeight = boardHeight;
         this.fruitCount = fruitCount;
+        this.frogCount = frogCount;
         this.obstaclesCount = obstaclesCount;
         this.minObstacleLength = minObstacleLength;
         this.maxObstacleLength = maxObstacleLength;
@@ -69,11 +71,14 @@ public class BoardGenerator {
 
     public Board generateBoard() throws TileOutOfBoundsException {
         Board generatedBoard = new Board(this.boardWidth, this.boardHeight);
-        Frog frog = new Frog(generateUnoccupiedCoordinatesAndMarkAsOccupied());
 
         for (int i = 0; i < this.fruitCount; i++) {
             Fruit fruit = new Fruit(generateUnoccupiedCoordinatesAndMarkAsOccupied());
             generatedBoard.addFruit(fruit);
+        }
+        for (int i = 0; i < this.frogCount; i++) {
+            Frog frog = new Frog(generateUnoccupiedCoordinatesAndMarkAsOccupied());
+            generatedBoard.addFrog(frog);
         }
         for (int i = 0; i < this.obstaclesCount; i++) {
             int segmentLength = this.minObstacleLength + rand.nextInt(this.maxObstacleLength - this.minObstacleLength);
@@ -85,7 +90,6 @@ public class BoardGenerator {
         }
         generatedBoard.setSnake(generateSnake());
         generatedBoard.setEnemySnake(generateSnake());
-        generatedBoard.setFrog(frog);
         return generatedBoard;
     }
 

@@ -15,7 +15,7 @@ public class GameLoop extends Thread{
 
     Snake snake;
     Snake enemySnake;
-    Frog frog;
+    ArrayList<Frog> frogs;
     ArrayList<Fruit> fruits;
     ArrayList<Coordinates> obstacles;
 
@@ -36,7 +36,7 @@ public class GameLoop extends Thread{
 
         this.snake = board.getSnake();
         this.enemySnake = board.getEnemySnake();
-        this.frog = board.getFrog();
+        this.frogs = board.getFrogs();
         this.fruits = board.getFruits();
     }
 
