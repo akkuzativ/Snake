@@ -8,19 +8,21 @@ public class BoardGenerator {
     private final int boardWidth;
     private final int boardHeight;
     private final int fruitCount;
+    private final int frogCount;
     private final int obstaclesCount;
     private final int snakeLength;
     private final int minObstacleLength;
     private final int maxObstacleLength;
     private final Random rand;
 
-    BoardGenerator(int boardWidth, int boardHeight, int fruitCount, int obstaclesCount,
+    BoardGenerator(int boardWidth, int boardHeight, int fruitCount, int frogCount, int obstaclesCount,
                    int minObstacleLength, int maxObstacleLength, int snakeLength) {
         this.rand = new Random();
         this.occupiedTiles = new boolean[boardWidth][boardHeight];
         this.boardWidth = boardWidth;
         this.boardHeight = boardHeight;
         this.fruitCount = fruitCount;
+        this.frogCount = frogCount;
         this.obstaclesCount = obstaclesCount;
         this.minObstacleLength = minObstacleLength;
         this.maxObstacleLength = maxObstacleLength;
@@ -57,7 +59,7 @@ public class BoardGenerator {
     }
 
     private Snake generateSnake() {
-        Direction snakeDirection = getRandomDirection();
+        Direction snakeDirection = DirectionUtilities.getRandomDirection();
         ArrayList<Coordinates> snakeSegment = generateLineSegment(this.snakeLength, snakeDirection);
         Coordinates snakeHead = snakeSegment.get(0);
         for (Coordinates segmentCoordinate : snakeSegment) {
@@ -69,43 +71,27 @@ public class BoardGenerator {
 
     public Board generateBoard() throws TileOutOfBoundsException {
         Board generatedBoard = new Board(this.boardWidth, this.boardHeight);
-        Frog frog = new Frog(generateUnoccupiedCoordinatesAndMarkAsOccupied());
 
         for (int i = 0; i < this.fruitCount; i++) {
             Fruit fruit = new Fruit(generateUnoccupiedCoordinatesAndMarkAsOccupied());
             generatedBoard.addFruit(fruit);
         }
+        for (int i = 0; i < this.frogCount; i++) {
+            Frog frog = new Frog(generateUnoccupiedCoordinatesAndMarkAsOccupied());
+            generatedBoard.addFrog(frog);
+        }
         for (int i = 0; i < this.obstaclesCount; i++) {
             int segmentLength = this.minObstacleLength + rand.nextInt(this.maxObstacleLength - this.minObstacleLength);
-            ArrayList<Coordinates> obstacleSegment = generateLineSegment(segmentLength, getRandomDirection());
+            ArrayList<Coordinates> obstacleSegment = generateLineSegment(segmentLength, DirectionUtilities.getRandomDirection());
             for (Coordinates segmentCoordinate : obstacleSegment) {
                 generatedBoard.addObstacle(segmentCoordinate);
                 this.occupiedTiles[segmentCoordinate.x][segmentCoordinate.y] = true;
             }
         }
-
         generatedBoard.setSnake(generateSnake());
         generatedBoard.setEnemySnake(generateSnake());
-        generatedBoard.setFrog(frog);
         return generatedBoard;
     }
-
-    private Direction getRandomDirection() {
-        Direction[] directions = Direction.values();
-        return directions[this.rand.nextInt(directions.length)];
-    }
-
-    private int[] getDeltas(Direction direction) {
-        int[] deltas = new int[2];
-        switch (direction) {
-            case UP -> deltas[1] = -1;
-            case DOWN -> deltas[1] = 1;
-            case LEFT -> deltas[0] = -1;
-            case RIGHT -> deltas[0] = 1;
-        }
-        return deltas;
-    }
-
 
     private boolean areCoordinatesNotInBounds(Coordinates coordinates, int margin) {
         return coordinates.x < margin || coordinates.x >= this.boardWidth - margin ||
@@ -129,7 +115,7 @@ public class BoardGenerator {
 
     private ArrayList<Coordinates> generateLineSegment(int segmentLength, Direction direction) {
         ArrayList<Coordinates> outputCoordinates = new ArrayList<>();
-        int[] deltas = getDeltas(direction);
+        int[] deltas = DirectionUtilities.getDeltas(direction);
         int deltaX = deltas[0];
         int deltaY = deltas[1];
         boolean isRoomForSegment = false;

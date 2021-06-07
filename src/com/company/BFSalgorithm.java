@@ -58,26 +58,26 @@ public class BFSalgorithm {
                 }
             }
         }
-        for (int i=0; i < this.board.getWidth(); i++) {
-            for (int j=0; j < this.board.getHeight(); j++) {
-                if (visitedCoordinates[j][i]) {
-                    System.out.printf("%3d", distancesMatrix[j][i]);
-                } else {
-                    System.out.print("  x");
-                }
-            }
-            System.out.println();
-        }
-        System.out.println();
+//        for (int i=0; i < this.board.getWidth(); i++) {
+//            for (int j=0; j < this.board.getHeight(); j++) {
+//                if (visitedCoordinates[j][i]) {
+//                    System.out.printf("%3d", distancesMatrix[j][i]);
+//                } else {
+//                    System.out.print("  x");
+//                }
+//            }
+//            System.out.println();
+//        }
+//        System.out.println();
         return distancesMatrix;
     }
 
-    public ArrayList<Coordinates> getLongestFrogPath(int[][] frogMatrix) {
+    public ArrayList<Coordinates> getLongestFrogPath(int[][] frogMatrix, Frog frog) {
         Coordinates targetCoordinates = null;
         boolean[][] visitedCoordinates = new boolean[board.getWidth()][board.getHeight()];
         Coordinates[][] previousCoordinates = new Coordinates[board.getWidth()][board.getHeight()];
         Queue<Coordinates> boardCoordinatesQueue = new LinkedList<>();
-        Coordinates startingPoint = this.board.getFrog().getCoordinates();
+        Coordinates startingPoint = frog.getCoordinates();
         boardCoordinatesQueue.add(startingPoint);
         visitedCoordinates[startingPoint.x][startingPoint.y] = true;
         previousCoordinates[startingPoint.x][startingPoint.y] = startingPoint;
@@ -135,25 +135,25 @@ public class BFSalgorithm {
         return path;
     }
 
-    public int[][] createFrogMatrix() {
+    public int[][] createFrogMatrix(Frog frog) {
         ArrayList<Coordinates> snakeHeads = new ArrayList<>();
         snakeHeads.add(this.board.getEnemySnake().getSnakeHead());
         snakeHeads.add(this.board.getSnake().getSnakeHead());
         int[][] snakeDistances = getDistancesMatrix(snakeHeads);
 
-        ArrayList<Coordinates> frog = new ArrayList<>();
-        frog.add(this.board.getFrog().getCoordinates());
-        int[][] frogDistances = getDistancesMatrix(frog);
+        ArrayList<Coordinates> frogList = new ArrayList<>();
+        frogList.add(frog.getCoordinates());
+        int[][] frogDistances = getDistancesMatrix(frogList);
         int[][] outputMatrix = new int[this.board.getWidth()][this.board.getHeight()];
 
         for (int i=0; i < this.board.getWidth(); i++) {
             for (int j=0; j < this.board.getHeight(); j++) {
                 outputMatrix[j][i] = snakeDistances[j][i] - frogDistances[j][i];
-                System.out.printf("%4d", outputMatrix[j][i]);
+//                System.out.printf("%4d", outputMatrix[j][i]);
             }
-            System.out.println();
+//            System.out.println();
         }
-        System.out.println();
+//        System.out.println();
         return outputMatrix;
     }
 }

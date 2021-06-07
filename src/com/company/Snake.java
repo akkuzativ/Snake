@@ -2,15 +2,6 @@ package com.company;
 
 import java.util.ArrayList;
 
-enum Direction {
-    UP,
-    DOWN,
-    LEFT,
-    RIGHT
-}
-
-class IncorrectDirectionException extends Exception {}
-
 public class Snake {
     private ArrayList<Coordinates> snakeBody;
     private Coordinates snakeHead;
@@ -34,7 +25,7 @@ public class Snake {
     }
 
     public void setMoveDirection(Direction moveDirection) throws IncorrectDirectionException {
-        if (this.moveDirection == getOppositeDirection(moveDirection)) {
+        if (this.moveDirection == DirectionUtilities.getOppositeDirection(moveDirection)) {
             throw new IncorrectDirectionException();
         }
         this.moveDirection = moveDirection;
@@ -42,14 +33,5 @@ public class Snake {
 
     public Direction getMoveDirection() {
         return moveDirection;
-    }
-
-    private Direction getOppositeDirection(Direction direction) {
-        return switch (direction) {
-            case UP -> Direction.DOWN;
-            case DOWN -> Direction.UP;
-            case LEFT -> Direction.RIGHT;
-            case RIGHT -> Direction.LEFT;
-        };
     }
 }
