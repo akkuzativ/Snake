@@ -1,6 +1,6 @@
 package com.company;
 
-public class Coordinates {
+public class Coordinates implements Collidable{
     public int x;
     public int y;
 

@@ -2,7 +2,7 @@ package com.company;
 
 import java.util.ArrayList;
 
-public class Snake {
+public class Snake implements Collidable{
     private ArrayList<Coordinates> snakeBody;
     private Coordinates snakeHead;
     private Direction moveDirection;

@@ -1,6 +1,6 @@
 package com.company;
 
-public class Fruit {
+public class Fruit implements Collidable{
     private Coordinates coordinates;
 
     Fruit(Coordinates coordinates) {

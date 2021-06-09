@@ -11,7 +11,8 @@ public class GameLoop extends Thread{
     int currentScore;
     KeyboardHandler keyboardHandler;
     GameFrame gameFrame;
-    SnakeController snakeController;
+    SnakeAI snakeAI;
+    FrogAI frogAI;
 
     Snake snake;
     Snake enemySnake;
@@ -32,12 +33,14 @@ public class GameLoop extends Thread{
 
         this.gameFrame.setFocusable(true);
 
-        this.snakeController = new SnakeController();
 
         this.snake = board.getSnake();
         this.enemySnake = board.getEnemySnake();
         this.frogs = board.getFrogs();
         this.fruits = board.getFruits();
+
+        this.snakeAI = new SnakeAI(board);
+        this.frogAI = new FrogAI(board, frogs.get(0));
     }
 
     private void processInput() {
@@ -72,8 +75,19 @@ public class GameLoop extends Thread{
     }
 
     private void updateState() {
-        snakeController.normalMove(snake);
-        //snakeController.normalMove(enemySnake);
+        SnakeController.normalMove(snake);
+        /*
+        try {
+            enemySnake.setMoveDirection(snakeAI.getNextMoveDirection());
+        }
+        catch (IncorrectDirectionException e) {
+
+        }
+        SnakeController.normalMove(enemySnake);
+                SnakeController.normalMove(enemySnake);
+         */
+        frogs.get(0).setMoveDirection(frogAI.getNextMoveDirection());
+        FrogController.move(frogs.get(0));
     }
 
     private void render() {
