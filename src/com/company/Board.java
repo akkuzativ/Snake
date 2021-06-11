@@ -19,7 +19,7 @@ class TileOutOfBoundsException extends Exception {}
 public class Board {
     private final int width;
     private final int height;
-    private Snake snake;
+    private Snake playerSnake;
     private Snake enemySnake;
     private ArrayList<Fruit> fruits = new ArrayList<>();
     private final ArrayList<Coordinates> obstacles = new ArrayList<>();
@@ -42,21 +42,21 @@ public class Board {
         return coordinates.x > this.width || coordinates.x < 0 || coordinates.y > this.height || coordinates.y < 0;
     }
 
-    public Snake getSnake() {
-        return snake;
+    public Snake getPlayerSnake() {
+        return playerSnake;
     }
 
-    public void setSnake(Snake snake) throws TileOutOfBoundsException {
-        if (IsOutOfBounds(snake.getSnakeHead())) {
+    public void setPlayerSnake(Snake playerSnake) throws TileOutOfBoundsException {
+        if (IsOutOfBounds(playerSnake.getSnakeHead())) {
             throw new TileOutOfBoundsException();
         }
-        for (Coordinates snakeTile: snake.getSnakeBody()) {
+        for (Coordinates snakeTile: playerSnake.getSnakeBody()) {
             if (IsOutOfBounds(snakeTile)) {
                 throw new TileOutOfBoundsException();
             }
         }
 
-        this.snake = snake;
+        this.playerSnake = playerSnake;
     }
 
     public Snake getEnemySnake() {
@@ -135,9 +135,9 @@ public class Board {
             Arrays.fill(row, BoardTile.EMPTY);
         }
 
-        if (this.snake != null) {
-            tiles[snake.getSnakeHead().x][snake.getSnakeHead().y] = BoardTile.SNAKE_HEAD;
-            ArrayList<Coordinates> snakeBody = snake.getSnakeBody();
+        if (this.playerSnake != null) {
+            tiles[playerSnake.getSnakeHead().x][playerSnake.getSnakeHead().y] = BoardTile.SNAKE_HEAD;
+            ArrayList<Coordinates> snakeBody = playerSnake.getSnakeBody();
             for (Coordinates snakeTile: snakeBody) {
                 tiles[snakeTile.x][snakeTile.y] = BoardTile.SNAKE;
             }
