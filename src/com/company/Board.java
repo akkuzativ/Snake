@@ -17,6 +17,9 @@ enum BoardTile {
 class TileOutOfBoundsException extends Exception {}
 
 public class Board {
+    public class GameObjectArrayList {
+        public ArrayList<Collidable> gameObjects = new ArrayList<>();
+    }
     private final int width;
     private final int height;
     private Snake playerSnake;
@@ -170,5 +173,58 @@ public class Board {
         }
 
         return tiles;
+    }
+
+    public GameObjectArrayList[][] getReferenceMatrix(Collidable currentGameObject) {
+        GameObjectArrayList[][] matrix = new GameObjectArrayList[this.width][this.height];
+
+
+        for (int i = 0; i < this.width; i++) {
+            for (int j = 0; j < this.height; j++) {
+                matrix[i][j] = new GameObjectArrayList();
+            }
+        }
+
+        if (this.playerSnake != null) {
+            if (currentGameObject != playerSnake) {
+                matrix[playerSnake.getSnakeHead().x][playerSnake.getSnakeHead().y].gameObjects.add(playerSnake);
+            }
+            ArrayList<Coordinates> snakeBody = playerSnake.getSnakeBody();
+            for (Coordinates snakeTile: snakeBody) {
+                matrix[snakeTile.x][snakeTile.y].gameObjects.add(playerSnake);
+            }
+        }
+
+        if (this.enemySnake != null) {
+            if (currentGameObject != enemySnake) {
+                matrix[enemySnake.getSnakeHead().x][enemySnake.getSnakeHead().y].gameObjects.add(enemySnake);
+            }
+            ArrayList<Coordinates> enemySnakeBody = enemySnake.getSnakeBody();
+            for (Coordinates enemySnakeTile: enemySnakeBody) {
+                matrix[enemySnakeTile.x][enemySnakeTile.y].gameObjects.add(enemySnake);
+            }
+        }
+
+        if (!this.frogs.isEmpty()){
+            for (Frog frog: this.frogs) {
+                if (currentGameObject != frog) {
+                    matrix[frog.getCoordinates().x][frog.getCoordinates().y].gameObjects.add(frog);
+                }
+            }
+        }
+
+        if (!this.fruits.isEmpty()){
+            for (Fruit fruit: fruits) {
+                matrix[fruit.getCoordinates().x][fruit.getCoordinates().y].gameObjects.add(fruit);
+            }
+        }
+
+        if (!this.obstacles.isEmpty()){
+            for (Coordinates obstacle : obstacles) {
+                matrix[obstacle.x][obstacle.y].gameObjects.add(obstacle);
+            }
+        }
+
+        return matrix;
     }
 }

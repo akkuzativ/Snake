@@ -66,7 +66,7 @@ public class BoardGenerator {
             this.occupiedTiles[segmentCoordinate.x][segmentCoordinate.y] = true;
         }
         snakeSegment.remove(0);
-        return new Snake(snakeSegment, snakeHead, snakeDirection);
+        return new Snake(snakeSegment, snakeHead, DirectionUtilities.getOppositeDirection(snakeDirection));
     }
 
     public Board generateBoard() throws TileOutOfBoundsException {
