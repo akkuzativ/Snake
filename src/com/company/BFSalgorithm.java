@@ -128,7 +128,7 @@ public class BFSalgorithm {
         path.add(currentCoordinates);
         while (currentCoordinates != startingCoordinates) {
             currentCoordinates = previous[currentCoordinates.x][currentCoordinates.y];
-            currentCoordinates.print();
+//            currentCoordinates.print();
             path.add(currentCoordinates);
         }
         Collections.reverse(path);
@@ -138,7 +138,7 @@ public class BFSalgorithm {
     public int[][] createFrogMatrix(Frog frog) {
         ArrayList<Coordinates> snakeHeads = new ArrayList<>();
         snakeHeads.add(this.board.getEnemySnake().getSnakeHead());
-        snakeHeads.add(this.board.getSnake().getSnakeHead());
+        snakeHeads.add(this.board.getPlayerSnake().getSnakeHead());
         int[][] snakeDistances = getDistancesMatrix(snakeHeads);
 
         ArrayList<Coordinates> frogList = new ArrayList<>();

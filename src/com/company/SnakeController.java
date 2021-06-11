@@ -3,11 +3,24 @@ package com.company;
 import java.util.ArrayList;
 
 public class SnakeController {
+    private Board board;
+    private Snake snake;
 
-    SnakeController() {
+    SnakeController(Board board, Snake snake) {
+        this.board = board;
+        this.snake = snake;
     }
 
-    public static void normalMove(Snake snake) {
+    public void move() {
+        // TODO: sprawdzenie czy na następnym polu jest owoc
+        if (true) {
+            normalMove();
+        } else {
+            growingMove();
+        }
+    }
+
+    private void normalMove() {
         Coordinates snakeHead = snake.getSnakeHead();
         ArrayList<Coordinates> snakeBody = snake.getSnakeBody();
         Direction moveDirection = snake.getMoveDirection();
@@ -25,7 +38,7 @@ public class SnakeController {
         snakeHead.y += DirectionUtilities.getDeltas(moveDirection)[1];
     }
 
-    public static void growingMove(Snake snake) {
+    private void growingMove() {
         Coordinates snakeHead = snake.getSnakeHead();
         ArrayList<Coordinates> snakeBody = snake.getSnakeBody();
         Direction moveDirection = snake.getMoveDirection();

@@ -27,24 +27,40 @@ public class FruitsAndFrogsGenerator {
         return new Coordinates(xCoordinate, yCoordinate);
     }
 
-    public void generateFruitsAndFrogs() throws TileOutOfBoundsException {
+    public ArrayList<Fruit> generateMissingFruitsList() {
+        int missingFruitsNumber = fruitCount - this.board.getFruits().size();
+        ArrayList<Fruit> missingFruits = new ArrayList<>();
+        for (int i = 0; i < missingFruitsNumber; i++) {
+            missingFruits.add(new Fruit(generateUnoccupiedCoordinates(0, this.board.getWidth(),
+                    0, this.board.getHeight())));
+        }
+        return missingFruits;
+    }
+
+    public ArrayList<Frog> generateMissingFrogsList() {
+        int missingFrogsNumber = frogCount - this.board.getFrogs().size();
+        ArrayList<Frog> missingFrogs = new ArrayList<>();
+        for (int i = 0; i < missingFrogsNumber; i++) {
+            missingFrogs.add(new Frog(generateUnoccupiedCoordinates(0, this.board.getWidth(),
+                    0, this.board.getHeight())));
+        }
+        return missingFrogs;
+    }
+
+    public void generateFruitsAndFrogs(ArrayList<Fruit> missingFruits, ArrayList<Frog> missingFrogs) {
         if (this.board.getFruits().size() < fruitCount) {
-            int missingFruitsNumber = fruitCount - this.board.getFruits().size();
-            ArrayList<Fruit> missingFruits = new ArrayList<>();
-            for (int i = 0; i < missingFruitsNumber; i++) {
-                missingFruits.add(new Fruit(generateUnoccupiedCoordinates(0, this.board.getWidth(),
-                                                                    0, this.board.getHeight())));
+            try {
+                this.board.setFruits(missingFruits);
+            } catch (TileOutOfBoundsException ignored) {
+
             }
-            this.board.setFruits(missingFruits);
         }
         if (this.board.getFrogs().size() < frogCount) {
-            int missingFrogsNumber = frogCount - this.board.getFrogs().size();
-            ArrayList<Frog> missingFrogs = new ArrayList<>();
-            for (int i = 0; i < missingFrogsNumber; i++) {
-                missingFrogs.add(new Frog(generateUnoccupiedCoordinates(0, this.board.getWidth(),
-                                                                    0, this.board.getHeight())));
+            try {
+                this.board.setFrogs(missingFrogs);
+            } catch (TileOutOfBoundsException ignored) {
+
             }
-            this.board.setFrogs(missingFrogs);
         }
     }
 }

@@ -88,7 +88,7 @@ public class BoardGenerator {
                 this.occupiedTiles[segmentCoordinate.x][segmentCoordinate.y] = true;
             }
         }
-        generatedBoard.setSnake(generateSnake());
+        generatedBoard.setPlayerSnake(generateSnake());
         generatedBoard.setEnemySnake(generateSnake());
         return generatedBoard;
     }

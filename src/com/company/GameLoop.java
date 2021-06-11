@@ -19,6 +19,7 @@ public class GameLoop extends Thread{
     ArrayList<Frog> frogs;
     ArrayList<Fruit> fruits;
     ArrayList<Coordinates> obstacles;
+    ArrayList<GameObjectThread> gameObjectThreads = new ArrayList<>();
 
     GameLoop(Board board, BoardPanel boardPanel, GameFrame gameFrame){
         this.board = board;
@@ -34,94 +35,65 @@ public class GameLoop extends Thread{
         this.gameFrame.setFocusable(true);
 
 
-        this.snake = board.getSnake();
+        this.snake = board.getPlayerSnake();
         this.enemySnake = board.getEnemySnake();
         this.frogs = board.getFrogs();
         this.fruits = board.getFruits();
 
-        this.snakeAI = new SnakeAI(board);
+        this.snakeAI = new SnakeAI(board, this.enemySnake);
         this.frogAI = new FrogAI(board, frogs.get(0));
     }
 
-    private void processInput() {
-        Direction newDirection = snake.getMoveDirection();
-        switch (keyboardHandler.getRecentlyPressedKey()) {
-            case UP:
-                newDirection = Direction.UP;
-                break;
-            case DOWN:
-                newDirection = Direction.DOWN;
-                break;
-            case LEFT:
-                newDirection = Direction.LEFT;
-                break;
-            case RIGHT:
-                newDirection = Direction.RIGHT;
-                break;
-            case ESC:
-                notPaused = !notPaused;
-                break;
-            default:
-                break;
-        }
-        if (notPaused) {
-            try {
-                snake.setMoveDirection(newDirection);
-            }
-            catch (IncorrectDirectionException e) {
-            }
-        }
-        keyboardHandler.flushRecentlyPressedKey();
-    }
-
     private void updateState() {
-        SnakeController.normalMove(snake);
-        /*
-        try {
-            enemySnake.setMoveDirection(snakeAI.getNextMoveDirection());
+        for (GameObjectThread gameObjectThread : this.gameObjectThreads) {
+            gameObjectThread.performNextAction();
         }
-        catch (IncorrectDirectionException e) {
-
-        }
-        SnakeController.normalMove(enemySnake);
-                SnakeController.normalMove(enemySnake);
-         */
-        frogs.get(0).setMoveDirection(frogAI.getNextMoveDirection());
-        FrogController.move(frogs.get(0));
     }
 
     private void render() {
         this.boardPanel.setCurrentBoard(board);
-
         this.gameFrame.revalidate();
         this.gameFrame.repaint();
     }
 
     public void run() {
         boardPanel.setCurrentBoard(board);
+        // TODO: Dodać pozostałe wątki
+//        this.gameObjectThreads.add(new EnemySnakeThread(this.board));
+        this.gameObjectThreads.add(new PlayerSnakeThread(this.board, this.keyboardHandler));
+        for (Frog frog : this.board.getFrogs()) {
+            this.gameObjectThreads.add(new FrogThread(this.board, frog));
+        }
+        this.gameObjectThreads.add(new FruitsAndFrogsGeneratorThread(this.board));
+
+        for (GameObjectThread gameObjectThread : this.gameObjectThreads) {
+            gameObjectThread.start();
+        }
 
         while (true) {
-
-            processInput();
-
             if (this.notPaused) {
-                this.updateState();
                 this.render();
-            }
 
-            if (this.gameOver) {
-                break;
-            }
+                for (GameObjectThread gameObjectThread : this.gameObjectThreads) {
+                    gameObjectThread.startCalculatingNextAction();
+                }
 
-            // !!!!!!!!!!!!!!!!!!!
-            // TODO
-            try {
-                Thread.sleep(160);
-            }
-            catch (Exception e) {
-            }
-            // !!!!!!!!!!!!!!!!!!!
+                // !!!!!!!!!!!!!!!!!!!
+                // TODO
+                try {
+                    Thread.sleep(160);
+                } catch (Exception e) {
+                }
+                // !!!!!!!!!!!!!!!!!!!
 
+//                processInput();
+
+                updateState();
+
+                if (this.gameOver) {
+                    break;
+                }
+            }
         }
     }
 }
