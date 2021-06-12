@@ -6,7 +6,6 @@ import javax.swing.*;
 
 public class MenuPanel extends JPanel{
     JButton startButton = new JButton("Start");
-    JButton settingsButton = new JButton("Settings");
     JButton highScoreButton = new JButton("High-Score");
     JButton quitButton = new JButton("Quit");
 
@@ -16,10 +15,9 @@ public class MenuPanel extends JPanel{
         buttonPanel.setAlignmentY(CENTER_ALIGNMENT);
         buttonPanel.setAlignmentX(CENTER_ALIGNMENT);
         startButton.setActionCommand("START");
-        settingsButton.setActionCommand("SETTINGS");
         highScoreButton.setActionCommand("HIGH_SCORE");
         quitButton.setActionCommand("QUIT");
-        JButton[] buttons = {startButton, settingsButton, highScoreButton, quitButton};
+        JButton[] buttons = {startButton, highScoreButton, quitButton};
         for (JButton button: buttons) {
             button.setAlignmentX(CENTER_ALIGNMENT);
             button.setVisible(true);
