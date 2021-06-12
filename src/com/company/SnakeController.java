@@ -6,18 +6,15 @@ public class SnakeController {
     private Board board;
     private Snake snake;
     private boolean nextMoveGrows;
-    private boolean isDead;
 
     SnakeController(Board board, Snake snake) {
         this.board = board;
         this.snake = snake;
         this.nextMoveGrows = false;
-        this.isDead = false;
     }
 
     public void move() {
-        // TODO: sprawdzenie czy na następnym polu jest owoc
-        handleCollisions();
+        System.out.println(snake.getMoveDirection());
         if (!nextMoveGrows) {
             normalMove();
         } else {
@@ -26,26 +23,28 @@ public class SnakeController {
         }
     }
 
-    public void handleCollisions() {
+    public ArrayList<Collidable> handleCollisions() {
         Coordinates head = snake.getSnakeHead();
-        if (head.x < 0 || head.x > board.getWidth() || head.y < 0 || head.y > board.getHeight()) {
-            this.snake = null;
-            this.isDead = true;
+        ArrayList<Collidable> gameObjectsToRemove = new ArrayList<>();
+        int[] deltas = DirectionUtilities.getDeltas(snake.getMoveDirection());
+        if ( (head.x + deltas[0]) < 0 || (head.x + deltas[0]) >= board.getWidth() ||
+                (head.y + deltas[1]) < 0 || (head.y + deltas[1]) >= board.getHeight()) {
+            gameObjectsToRemove.add(snake);
         }
         else {
             Board.GameObjectArrayList[][] references = board.getReferenceMatrix(snake);
-            ArrayList<Collidable> gameObjects = references[head.x][head.y].gameObjects;
+            ArrayList<Collidable> gameObjects = references[head.x + deltas[0]][head.y + deltas[1]].gameObjects;
             if (!gameObjects.isEmpty()) {
                 for (Collidable gameObject: gameObjects) {
-                    System.out.println(gameObject.getClass().getSimpleName());
-                    switch (gameObject.getClass().getSimpleName()) {
+                    switch (gameObject.getName()) {
                         case "Coordinates": case "Snake":
-                            this.snake = null;
-                            this.isDead = true;
+                            gameObjectsToRemove.add(snake);
                             break;
                         case "Frog": case "Fruit":
+                            System.out.flush();
+                            System.out.println("hit Fruit");
                             this.nextMoveGrows = true;
-                            gameObject = null;
+                            gameObjectsToRemove.add(gameObject);
                             break;
                         default:
                             break;
@@ -53,6 +52,7 @@ public class SnakeController {
                 }
             }
         }
+        return gameObjectsToRemove;
     }
 
     private void normalMove() {
@@ -77,7 +77,19 @@ public class SnakeController {
         Coordinates snakeHead = snake.getSnakeHead();
         ArrayList<Coordinates> snakeBody = snake.getSnakeBody();
         Direction moveDirection = snake.getMoveDirection();
-        snakeBody.add(new Coordinates(snakeHead.x, snakeHead.y));
+        Coordinates lastSegment = snakeBody.get(snakeBody.size() - 1);
+        Coordinates segmentToAdd = new Coordinates(lastSegment.x, lastSegment.y);
+        for (int i = (snakeBody.size() - 1); i >= 0; i-- ) {
+            if (i == 0) {
+                snakeBody.get(i).x = snakeHead.x;
+                snakeBody.get(i).y = snakeHead.y;
+            }
+            else {
+                snakeBody.get(i).x = snakeBody.get(i - 1).x;
+                snakeBody.get(i).y = snakeBody.get(i - 1).y;
+            }
+        }
+        snakeBody.add(segmentToAdd);
         snakeHead.x += DirectionUtilities.getDeltas(moveDirection)[0];
         snakeHead.y += DirectionUtilities.getDeltas(moveDirection)[1];
     }

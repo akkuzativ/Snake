@@ -1,6 +1,12 @@
 package com.company;
 
+import org.w3c.dom.events.Event;
+
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 public class GameLoop extends Thread{
     final Board board;
@@ -20,6 +26,7 @@ public class GameLoop extends Thread{
     ArrayList<Fruit> fruits;
     ArrayList<Coordinates> obstacles;
     ArrayList<GameObjectThread> gameObjectThreads = new ArrayList<>();
+
 
     GameLoop(Board board, BoardPanel boardPanel, GameFrame gameFrame){
         this.board = board;
@@ -48,12 +55,33 @@ public class GameLoop extends Thread{
         for (GameObjectThread gameObjectThread : this.gameObjectThreads) {
             gameObjectThread.performNextAction();
         }
+        if (snake != null) {
+            currentScore = snake.getSnakeBody().size() + 1;
+        }
+        if (board.getPlayerSnake() == null) {
+            gameOver = true;
+        }
     }
 
     private void render() {
         this.boardPanel.setCurrentBoard(board);
         this.gameFrame.revalidate();
         this.gameFrame.repaint();
+    }
+
+    private void removeGameObjects() {
+        Set<Collidable> gameObjectsToRemove = new HashSet<Collidable>();
+        for (GameObjectThread gameObjectThread : this.gameObjectThreads) {
+            gameObjectsToRemove.addAll(gameObjectThread.getGameObjectsToRemove());
+        }
+        gameObjectsToRemove.removeIf(Objects::isNull);
+        if (!gameObjectsToRemove.isEmpty()) {
+            for (Collidable gameObject: gameObjectsToRemove) {
+                System.out.println(gameObject.getName());
+                board.removeGameObject(gameObject);
+            }
+        }
+        //gameObjectThreads.removeIf();
     }
 
     public void run() {
@@ -70,30 +98,22 @@ public class GameLoop extends Thread{
             gameObjectThread.start();
         }
 
-        while (true) {
-            if (this.notPaused) {
-                this.render();
+        while (!gameOver) {
+            render();
 
-                for (GameObjectThread gameObjectThread : this.gameObjectThreads) {
-                    gameObjectThread.startCalculatingNextAction();
-                }
-
-                // !!!!!!!!!!!!!!!!!!!
-                // TODO
-                try {
-                    Thread.sleep(160);
-                } catch (Exception e) {
-                }
-                // !!!!!!!!!!!!!!!!!!!
-
-//                processInput();
-
-                updateState();
-
-                if (this.gameOver) {
-                    break;
-                }
+            for (GameObjectThread gameObjectThread : this.gameObjectThreads) {
+                gameObjectThread.startCalculatingNextAction();
             }
+            // !!!!!!!!!!!!!!!!!!!
+            // TODO
+            try {
+                Thread.sleep(160);
+            } catch (Exception e) {
+            }
+            // !!!!!!!!!!!!!!!!!!!
+            removeGameObjects();
+            updateState();
         }
+        //gameFrame.dispatchEvent(new Event());
     }
 }

@@ -12,4 +12,8 @@ public class Coordinates implements Collidable{
     public void print() {
         System.out.println("(" + this.x + ", " + this.y + ")");
     }
+
+    public String getName() {
+        return "Coordinates";
+    }
 }

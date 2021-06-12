@@ -17,7 +17,7 @@ enum BoardTile {
 class TileOutOfBoundsException extends Exception {}
 
 public class Board {
-    public class GameObjectArrayList {
+    public static class GameObjectArrayList {
         public ArrayList<Collidable> gameObjects = new ArrayList<>();
     }
     private final int width;
@@ -106,8 +106,25 @@ public class Board {
         this.fruits.add(fruit);
     }
 
-    public void removeFruit(Fruit fruit) {
-        this.fruits.remove(fruit);
+    public void removeGameObject(Collidable gameObject) {
+        switch (gameObject.getName()) {
+            case "Fruit":
+                fruits.remove(((Fruit) gameObject));
+                break;
+            case "Frog":
+                frogs.remove(((Frog) gameObject));
+                break;
+            case "Snake":
+                if (gameObject == playerSnake) {
+                    playerSnake = null;
+                }
+                else {
+                    enemySnake = null;
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     public ArrayList<Fruit> getFruits() {
