@@ -33,26 +33,18 @@ public class GameFrame extends JFrame implements ActionListener {
             case "START":
                 try {
                     int fruitCount = 3;
-                    int frogCount = 2;
-                    BoardGenerator boardGenerator = new BoardGenerator(30, 30, fruitCount, frogCount,2,
+                    int frogCount = 1;
+                    BoardGenerator boardGenerator = new BoardGenerator(50, 50, fruitCount, frogCount,0,
                                                           10, 20, 3);
                     board = boardGenerator.generateBoard();
                     gameLoop = new GameLoop(board, boardPanel, this);
                     setContentPane(boardPanel);
                     gameLoop.start();
-                    boardPanel.setCurrentBoard(board);
-                    for (Frog frog: this.board.getFrogs()) {
-                        FrogAI frogAI = new FrogAI(board, frog);
-//                        System.out.println("frogAI: " + frogAI.getNextMoveDirection());
-                    }
-                    SnakeAI snakeAI = new SnakeAI(board, board.getEnemySnake());
-                    System.out.println("snakeAI: " + snakeAI.getNextMoveDirection());
                 } catch (TileOutOfBoundsException exception) {
                     System.out.println("Invalid board generated");
                     return;
                 }
                 panelToDisplay = boardPanel;
-
                 break;
             case "SETTINGS":
                 panelToDisplay = settingsPanel;
@@ -65,6 +57,10 @@ public class GameFrame extends JFrame implements ActionListener {
                 break;
             case "MENU":
                 panelToDisplay = menuPanel;
+                break;
+            case "GAME_OVER":
+                System.out.println("koniec");
+                panelToDisplay = gameOverPanel;
                 break;
             default:
         }

@@ -10,6 +10,7 @@ public class PlayerSnakeThread extends Thread implements GameObjectThread {
     private Direction nextAction;
     private KeyboardHandler keyboardHandler;
     private ArrayList<Collidable> gameObjectsToRemove = new ArrayList<>();
+    private boolean killed = false;
 
     PlayerSnakeThread(Board board, KeyboardHandler keyboardHandler) {
         this.board = board;
@@ -21,10 +22,9 @@ public class PlayerSnakeThread extends Thread implements GameObjectThread {
     @Override
     public void run() {
         while (true) {
-            if (board.getPlayerSnake() == null) {
+            if (board.getPlayerSnake() == null || killed) {
                 break;
             }
-
             if (this.canCalculateNextAction) {
                 this.nextAction = this.board.getPlayerSnake().getMoveDirection();
                 switch (this.keyboardHandler.getRecentlyPressedKey()) {
@@ -74,12 +74,12 @@ public class PlayerSnakeThread extends Thread implements GameObjectThread {
     }
 
     @Override
-    public void clearGameObjectsToRemove() {
-        gameObjectsToRemove.clear();
+    public Collidable getRelatedGameObject() {
+        return board.getPlayerSnake();
     }
 
     @Override
-    public Collidable getRelatedGameObject() {
-        return board.getPlayerSnake();
+    public void forceKill() {
+        killed = true;
     }
 }

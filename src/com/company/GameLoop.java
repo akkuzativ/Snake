@@ -2,6 +2,8 @@ package com.company;
 
 import org.w3c.dom.events.Event;
 
+import javax.swing.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -83,15 +85,23 @@ public class GameLoop extends Thread{
         gameObjectThreads.removeIf(gameObjectThread -> gameObjectThread.getRelatedGameObject() == null);
     }
 
+    private void cleanUpAndExit() {
+
+    }
+
     public void run() {
         boardPanel.setCurrentBoard(board);
         // TODO: Dodać pozostałe wątki
-        //this.gameObjectThreads.add(new EnemySnakeThread(this.board));
+        this.gameObjectThreads.add(new EnemySnakeThread(this.board));
         this.gameObjectThreads.add(new PlayerSnakeThread(this.board, this.keyboardHandler));
         for (Frog frog : this.board.getFrogs()) {
             this.gameObjectThreads.add(new FrogThread(this.board, frog));
         }
+
+
         //this.gameObjectThreads.add(new FruitsAndFrogsGeneratorThread(this.board));
+
+
 
         for (GameObjectThread gameObjectThread : this.gameObjectThreads) {
             gameObjectThread.start();
@@ -102,17 +112,36 @@ public class GameLoop extends Thread{
             for (GameObjectThread gameObjectThread : this.gameObjectThreads) {
                 gameObjectThread.startCalculatingNextAction();
             }
+
+            for (GameObjectThread gameObjectThread: gameObjectThreads) {
+                if (gameObjectThread.getRelatedGameObject().getName().equals("Frog")) {
+                    System.out.println(gameObjectThread.getRelatedGameObject());
+                    System.out.println("------");
+
+                }
+            }
+
             // !!!!!!!!!!!!!!!!!!!
             // TODO
             try {
-                Thread.sleep(160);
+                Thread.sleep(100);
             } catch (Exception e) {
             }
             // !!!!!!!!!!!!!!!!!!!
+
             updateState();
             removeGameObjects();
             render();
         }
-        //gameFrame.dispatchEvent(new Event());
+
+        for (GameObjectThread gameObjectThread: gameObjectThreads) {
+            gameObjectThread.forceKill();
+        }
+
+
+
+        gameObjectThreads.clear();
+        //ActionEvent gameOverEvent = new ActionEvent(this, ActionEvent.ACTION_FIRST, "GAME_OVER");
+        //gameFrame.event
     }
 }

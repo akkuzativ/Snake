@@ -9,6 +9,7 @@ public class EnemySnakeThread extends Thread implements GameObjectThread{
     private boolean canCalculateNextAction = false;
     private Direction nextAction;
     private ArrayList<Collidable> gameObjectsToRemove = new ArrayList<>();
+    private boolean killed = false;
 
     EnemySnakeThread(Board board) {
         this.board = board;
@@ -19,7 +20,7 @@ public class EnemySnakeThread extends Thread implements GameObjectThread{
     @Override
     public void run() {
         while (true) {
-            if (board.getEnemySnake() == null) {
+            if (board.getEnemySnake() == null || killed) {
                 break;
             }
             if (this.canCalculateNextAction) {
@@ -54,12 +55,12 @@ public class EnemySnakeThread extends Thread implements GameObjectThread{
     }
 
     @Override
-    public void clearGameObjectsToRemove() {
-        gameObjectsToRemove.clear();
+    public Collidable getRelatedGameObject() {
+        return board.getEnemySnake();
     }
 
     @Override
-    public Collidable getRelatedGameObject() {
-        return board.getEnemySnake();
+    public void forceKill() {
+        killed = true;
     }
 }

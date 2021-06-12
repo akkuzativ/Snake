@@ -9,6 +9,7 @@ public class FrogThread extends Thread implements GameObjectThread {
     private Direction nextAction;
     private Frog frog;
     private ArrayList<Collidable> gameObjectsToRemove = new ArrayList<>();
+    private boolean killed = false;
 
     FrogThread(Board board, Frog frog) {
         this.board = board;
@@ -19,7 +20,8 @@ public class FrogThread extends Thread implements GameObjectThread {
     @Override
     public void run() {
         while (true) {
-            if (frog == null) {
+            if (!board.getFrogs().contains(frog) || killed) {
+                frog = null;
                 break;
             }
             if (this.canCalculateNextAction) {
@@ -51,12 +53,12 @@ public class FrogThread extends Thread implements GameObjectThread {
     }
 
     @Override
-    public void clearGameObjectsToRemove() {
-        gameObjectsToRemove.clear();
+    public Collidable getRelatedGameObject() {
+        return frog;
     }
 
     @Override
-    public Collidable getRelatedGameObject() {
-        return frog;
+    public void forceKill() {
+        killed = true;
     }
 }
