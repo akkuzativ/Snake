@@ -50,14 +50,18 @@ public class FruitsAndFrogsGenerator {
     public void generateFruitsAndFrogs(ArrayList<Fruit> missingFruits, ArrayList<Frog> missingFrogs) {
         if (this.board.getFruits().size() < fruitCount) {
             try {
-                this.board.setFruits(missingFruits);
+                for (Fruit missingFruit : missingFruits) {
+                    this.board.addFruit(missingFruit);
+                }
             } catch (TileOutOfBoundsException ignored) {
 
             }
         }
         if (this.board.getFrogs().size() < frogCount) {
             try {
-                this.board.setFrogs(missingFrogs);
+                for (Frog missingFrog : missingFrogs) {
+                    this.board.addFrog(missingFrog);
+                }
             } catch (TileOutOfBoundsException ignored) {
 
             }

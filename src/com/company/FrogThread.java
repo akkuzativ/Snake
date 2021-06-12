@@ -43,7 +43,7 @@ public class FrogThread extends Thread implements GameObjectThread {
     @Override
     public void performNextAction() {
         this.frog.setMoveDirection(this.nextAction);
-        //FrogController.move(this.frog);
+        FrogController.move(this.frog);
         gameObjectsToRemove = FrogController.handleCollisions(frog, board);
     }
 

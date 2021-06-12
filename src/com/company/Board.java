@@ -24,9 +24,10 @@ public class Board {
     private final int height;
     private Snake playerSnake;
     private Snake enemySnake;
-    private ArrayList<Fruit> fruits = new ArrayList<>();
     private final ArrayList<Coordinates> obstacles = new ArrayList<>();
+    private ArrayList<Fruit> fruits = new ArrayList<>();
     private ArrayList<Frog> frogs = new ArrayList<>();
+    private ArrayList<Frog> missingFrogs = new ArrayList<>();
 
     public Board(int width, int height) {
         this.width = width;
@@ -104,6 +105,19 @@ public class Board {
             throw new TileOutOfBoundsException();
         }
         this.fruits.add(fruit);
+    }
+
+    public ArrayList<Frog> getMissingFrogs() {
+        return this.missingFrogs;
+    }
+
+    public void setMissingFrogs(ArrayList<Frog> frogs) {
+        this.missingFrogs = frogs;
+        this.frogs.addAll(this.missingFrogs);
+    }
+
+    public void clearMissingFrogs() {
+        this.missingFrogs.clear();
     }
 
     public void removeGameObject(Collidable gameObject) {

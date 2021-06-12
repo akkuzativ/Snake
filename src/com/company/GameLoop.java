@@ -91,17 +91,9 @@ public class GameLoop extends Thread{
 
     public void run() {
         boardPanel.setCurrentBoard(board);
-        // TODO: Dodać pozostałe wątki
         this.gameObjectThreads.add(new EnemySnakeThread(this.board));
         this.gameObjectThreads.add(new PlayerSnakeThread(this.board, this.keyboardHandler));
-        for (Frog frog : this.board.getFrogs()) {
-            this.gameObjectThreads.add(new FrogThread(this.board, frog));
-        }
-
-
-        //this.gameObjectThreads.add(new FruitsAndFrogsGeneratorThread(this.board));
-
-
+        this.gameObjectThreads.add(new FruitsAndFrogsGeneratorThread(this.board));
 
         for (GameObjectThread gameObjectThread : this.gameObjectThreads) {
             gameObjectThread.start();
@@ -109,6 +101,13 @@ public class GameLoop extends Thread{
 
         //render();
         while (!gameOver) {
+            for (Frog frog : this.board.getMissingFrogs()) {
+                GameObjectThread gameObjectThread = new FrogThread(this.board, frog);
+                this.gameObjectThreads.add(gameObjectThread);
+                gameObjectThread.start();
+            }
+            this.board.clearMissingFrogs();
+
             for (GameObjectThread gameObjectThread : this.gameObjectThreads) {
                 gameObjectThread.startCalculatingNextAction();
             }
@@ -128,15 +127,12 @@ public class GameLoop extends Thread{
             if (gameObjectThread.getRelatedGameObject().getName().equals("Frog")) {
                 System.out.println(gameObjectThread.getRelatedGameObject());
                 System.out.println("------");
-
             }
         }
 
         for (GameObjectThread gameObjectThread: gameObjectThreads) {
             gameObjectThread.forceKill();
         }
-
-
 
         gameObjectThreads.clear();
         //ActionEvent gameOverEvent = new ActionEvent(this, ActionEvent.ACTION_FIRST, "GAME_OVER");
