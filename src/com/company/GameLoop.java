@@ -82,7 +82,7 @@ public class GameLoop extends Thread{
                 board.removeGameObject(gameObject);
             }
         }
-        gameObjectThreads.removeIf(gameObjectThread -> gameObjectThread.getRelatedGameObject() == null);
+        gameObjectThreads.removeIf( gameObjectThread -> gameObjectThread.getRelatedGameObject() == null );
     }
 
     private void cleanUpAndExit() {
@@ -109,18 +109,13 @@ public class GameLoop extends Thread{
 
         //render();
         while (!gameOver) {
+            //
             for (GameObjectThread gameObjectThread : this.gameObjectThreads) {
                 gameObjectThread.startCalculatingNextAction();
             }
+            //removeGameObjects();
 
-            for (GameObjectThread gameObjectThread: gameObjectThreads) {
-                if (gameObjectThread.getRelatedGameObject().getName().equals("Frog")) {
-                    System.out.println(gameObjectThread.getRelatedGameObject());
-                    System.out.println("------");
-
-                }
-            }
-
+            //removeGameObjects();
             // !!!!!!!!!!!!!!!!!!!
             // TODO
             try {
@@ -128,10 +123,19 @@ public class GameLoop extends Thread{
             } catch (Exception e) {
             }
             // !!!!!!!!!!!!!!!!!!!
+            removeGameObjects();
 
             updateState();
             removeGameObjects();
+            //removeGameObjects();
             render();
+        }
+        for (GameObjectThread gameObjectThread: gameObjectThreads) {
+            if (gameObjectThread.getRelatedGameObject().getName().equals("Frog")) {
+                System.out.println(gameObjectThread.getRelatedGameObject());
+                System.out.println("------");
+
+            }
         }
 
         for (GameObjectThread gameObjectThread: gameObjectThreads) {

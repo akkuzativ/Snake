@@ -25,6 +25,7 @@ public class PlayerSnakeThread extends Thread implements GameObjectThread {
             if (board.getPlayerSnake() == null || killed) {
                 break;
             }
+            gameObjectsToRemove = snakeController.handleCollisions();
             if (this.canCalculateNextAction) {
                 this.nextAction = this.board.getPlayerSnake().getMoveDirection();
                 switch (this.keyboardHandler.getRecentlyPressedKey()) {
@@ -65,7 +66,7 @@ public class PlayerSnakeThread extends Thread implements GameObjectThread {
         catch (IncorrectDirectionException ignored) {
         }
         this.snakeController.move();
-        gameObjectsToRemove = snakeController.handleCollisions();
+
     }
 
     @Override
