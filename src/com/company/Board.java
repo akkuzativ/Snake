@@ -155,22 +155,6 @@ public class Board {
             Arrays.fill(row, BoardTile.EMPTY);
         }
 
-        if (this.playerSnake != null) {
-            tiles[playerSnake.getSnakeHead().x][playerSnake.getSnakeHead().y] = BoardTile.SNAKE_HEAD;
-            ArrayList<Coordinates> snakeBody = playerSnake.getSnakeBody();
-            for (Coordinates snakeTile: snakeBody) {
-                tiles[snakeTile.x][snakeTile.y] = BoardTile.SNAKE;
-            }
-        }
-
-        if (this.enemySnake != null) {
-            tiles[enemySnake.getSnakeHead().x][enemySnake.getSnakeHead().y] = BoardTile.ENEMY_SNAKE_HEAD;
-            ArrayList<Coordinates> enemySnakeBody = enemySnake.getSnakeBody();
-            for (Coordinates enemySnakeTile: enemySnakeBody) {
-                tiles[enemySnakeTile.x][enemySnakeTile.y] = BoardTile.ENEMY_SNAKE;
-            }
-        }
-
         if (!this.frogs.isEmpty()){
             for (Frog frog: this.frogs) {
                 tiles[frog.getCoordinates().x][frog.getCoordinates().y] = BoardTile.FROG;
@@ -181,6 +165,22 @@ public class Board {
             for (Fruit fruit: fruits) {
                 tiles[fruit.getCoordinates().x][fruit.getCoordinates().y] = BoardTile.FRUIT;
             }
+        }
+
+        if (this.playerSnake != null) {
+            ArrayList<Coordinates> snakeBody = playerSnake.getSnakeBody();
+            for (Coordinates snakeTile: snakeBody) {
+                tiles[snakeTile.x][snakeTile.y] = BoardTile.SNAKE;
+            }
+            tiles[playerSnake.getSnakeHead().x][playerSnake.getSnakeHead().y] = BoardTile.SNAKE_HEAD;
+        }
+
+        if (this.enemySnake != null) {
+            ArrayList<Coordinates> enemySnakeBody = enemySnake.getSnakeBody();
+            for (Coordinates enemySnakeTile: enemySnakeBody) {
+                tiles[enemySnakeTile.x][enemySnakeTile.y] = BoardTile.ENEMY_SNAKE;
+            }
+            tiles[enemySnake.getSnakeHead().x][enemySnake.getSnakeHead().y] = BoardTile.ENEMY_SNAKE_HEAD;
         }
 
         if (!this.obstacles.isEmpty()){
@@ -203,30 +203,39 @@ public class Board {
         }
 
         if (this.playerSnake != null) {
-            if (currentGameObject != playerSnake) {
-                matrix[playerSnake.getSnakeHead().x][playerSnake.getSnakeHead().y].gameObjects.add(playerSnake);
+            try {
+                if (currentGameObject != playerSnake) {
+                    matrix[playerSnake.getSnakeHead().x][playerSnake.getSnakeHead().y].gameObjects.add(playerSnake);
+                }
+                ArrayList<Coordinates> snakeBody = playerSnake.getSnakeBody();
+                for (Coordinates snakeTile : snakeBody) {
+                    matrix[snakeTile.x][snakeTile.y].gameObjects.add(playerSnake);
+                }
             }
-            ArrayList<Coordinates> snakeBody = playerSnake.getSnakeBody();
-            for (Coordinates snakeTile: snakeBody) {
-                matrix[snakeTile.x][snakeTile.y].gameObjects.add(playerSnake);
-            }
+            catch (Exception e) { }
         }
 
         if (this.enemySnake != null) {
-            if (currentGameObject != enemySnake) {
-                matrix[enemySnake.getSnakeHead().x][enemySnake.getSnakeHead().y].gameObjects.add(enemySnake);
+            try {
+                if (currentGameObject != enemySnake) {
+                    matrix[enemySnake.getSnakeHead().x][enemySnake.getSnakeHead().y].gameObjects.add(enemySnake);
+                }
+                ArrayList<Coordinates> enemySnakeBody = enemySnake.getSnakeBody();
+                for (Coordinates enemySnakeTile : enemySnakeBody) {
+                    matrix[enemySnakeTile.x][enemySnakeTile.y].gameObjects.add(enemySnake);
+                }
             }
-            ArrayList<Coordinates> enemySnakeBody = enemySnake.getSnakeBody();
-            for (Coordinates enemySnakeTile: enemySnakeBody) {
-                matrix[enemySnakeTile.x][enemySnakeTile.y].gameObjects.add(enemySnake);
-            }
+            catch (Exception e) { }
         }
 
         if (!this.frogs.isEmpty()){
             for (Frog frog: this.frogs) {
-                if (currentGameObject != frog) {
-                    matrix[frog.getCoordinates().x][frog.getCoordinates().y].gameObjects.add(frog);
+                try {
+                    if (currentGameObject != frog) {
+                        matrix[frog.getCoordinates().x][frog.getCoordinates().y].gameObjects.add(frog);
+                    }
                 }
+                catch (Exception e) { }
             }
         }
 

@@ -22,7 +22,6 @@ public class EnemySnakeThread extends Thread implements GameObjectThread{
             if (board.getEnemySnake() == null) {
                 break;
             }
-            gameObjectsToRemove = snakeController.handleCollisions();
             if (this.canCalculateNextAction) {
                 this.nextAction = this.snakeAI.getNextMoveDirection();
                 this.canCalculateNextAction = false;
@@ -46,13 +45,21 @@ public class EnemySnakeThread extends Thread implements GameObjectThread{
         } catch (IncorrectDirectionException ignored) {
         }
         this.snakeController.move();
+        gameObjectsToRemove = snakeController.handleCollisions();
     }
 
+    @Override
     public ArrayList<Collidable> getGameObjectsToRemove() {
         return gameObjectsToRemove;
     }
 
+    @Override
     public void clearGameObjectsToRemove() {
         gameObjectsToRemove.clear();
+    }
+
+    @Override
+    public Collidable getRelatedGameObject() {
+        return board.getEnemySnake();
     }
 }

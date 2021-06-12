@@ -8,4 +8,5 @@ public interface GameObjectThread {
     void performNextAction();
     ArrayList<Collidable> getGameObjectsToRemove();
     void clearGameObjectsToRemove();
+    Collidable getRelatedGameObject();
 }

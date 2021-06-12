@@ -37,10 +37,23 @@ public class FruitsAndFrogsGeneratorThread extends Thread implements GameObjectT
         this.fruitsAndFrogsGenerator.generateFruitsAndFrogs(this.missingFruits, this.missingFrogs);
     }
 
+    @Override
     public ArrayList<Collidable> getGameObjectsToRemove() {
         return null;
     }
 
+    @Override
     public void clearGameObjectsToRemove() {
     }
+
+    @Override
+    public Collidable getRelatedGameObject() {
+        return new Collidable() {
+            @Override
+            public String getName() {
+                return "dummy";
+            }
+        };
+    }
+
 }

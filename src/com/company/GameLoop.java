@@ -77,11 +77,10 @@ public class GameLoop extends Thread{
         gameObjectsToRemove.removeIf(Objects::isNull);
         if (!gameObjectsToRemove.isEmpty()) {
             for (Collidable gameObject: gameObjectsToRemove) {
-                System.out.println(gameObject.getName());
                 board.removeGameObject(gameObject);
             }
         }
-        //gameObjectThreads.removeIf();
+        gameObjectThreads.removeIf(gameObjectThread -> gameObjectThread.getRelatedGameObject() == null);
     }
 
     public void run() {
@@ -98,9 +97,8 @@ public class GameLoop extends Thread{
             gameObjectThread.start();
         }
 
+        //render();
         while (!gameOver) {
-            render();
-
             for (GameObjectThread gameObjectThread : this.gameObjectThreads) {
                 gameObjectThread.startCalculatingNextAction();
             }
@@ -111,8 +109,9 @@ public class GameLoop extends Thread{
             } catch (Exception e) {
             }
             // !!!!!!!!!!!!!!!!!!!
-            removeGameObjects();
             updateState();
+            removeGameObjects();
+            render();
         }
         //gameFrame.dispatchEvent(new Event());
     }

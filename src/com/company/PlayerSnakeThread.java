@@ -26,7 +26,6 @@ public class PlayerSnakeThread extends Thread implements GameObjectThread {
             }
 
             if (this.canCalculateNextAction) {
-                gameObjectsToRemove = snakeController.handleCollisions();
                 this.nextAction = this.board.getPlayerSnake().getMoveDirection();
                 switch (this.keyboardHandler.getRecentlyPressedKey()) {
                     case UP:
@@ -66,13 +65,21 @@ public class PlayerSnakeThread extends Thread implements GameObjectThread {
         catch (IncorrectDirectionException ignored) {
         }
         this.snakeController.move();
+        gameObjectsToRemove = snakeController.handleCollisions();
     }
 
+    @Override
     public ArrayList<Collidable> getGameObjectsToRemove() {
         return gameObjectsToRemove;
     }
 
+    @Override
     public void clearGameObjectsToRemove() {
         gameObjectsToRemove.clear();
+    }
+
+    @Override
+    public Collidable getRelatedGameObject() {
+        return board.getPlayerSnake();
     }
 }

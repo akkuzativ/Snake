@@ -18,13 +18,11 @@ public class FrogThread extends Thread implements GameObjectThread {
 
     @Override
     public void run() {
-        this.nextAction = this.frogAI.getNextMoveDirection();
         while (true) {
             if (frog == null) {
                 break;
             }
             if (this.canCalculateNextAction) {
-                //gameObjectsToRemove = FrogController.handleCollisions(frog, board);
                 this.nextAction = this.frogAI.getNextMoveDirection();
                 this.canCalculateNextAction = false;
             }
@@ -44,13 +42,21 @@ public class FrogThread extends Thread implements GameObjectThread {
     public void performNextAction() {
         this.frog.setMoveDirection(this.nextAction);
         FrogController.move(this.frog);
+        gameObjectsToRemove = FrogController.handleCollisions(frog, board);
     }
 
+    @Override
     public ArrayList<Collidable> getGameObjectsToRemove() {
         return gameObjectsToRemove;
     }
 
+    @Override
     public void clearGameObjectsToRemove() {
         gameObjectsToRemove.clear();
+    }
+
+    @Override
+    public Collidable getRelatedGameObject() {
+        return frog;
     }
 }

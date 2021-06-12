@@ -14,7 +14,6 @@ public class SnakeController {
     }
 
     public void move() {
-        System.out.println(snake.getMoveDirection());
         if (!nextMoveGrows) {
             normalMove();
         } else {
@@ -26,14 +25,13 @@ public class SnakeController {
     public ArrayList<Collidable> handleCollisions() {
         Coordinates head = snake.getSnakeHead();
         ArrayList<Collidable> gameObjectsToRemove = new ArrayList<>();
-        int[] deltas = DirectionUtilities.getDeltas(snake.getMoveDirection());
-        if ( (head.x + deltas[0]) < 0 || (head.x + deltas[0]) >= board.getWidth() ||
-                (head.y + deltas[1]) < 0 || (head.y + deltas[1]) >= board.getHeight()) {
+        if ( head.x < 0 || head.x >= board.getWidth() ||
+                head.y < 0 || head.y >= board.getHeight()) {
             gameObjectsToRemove.add(snake);
         }
         else {
             Board.GameObjectArrayList[][] references = board.getReferenceMatrix(snake);
-            ArrayList<Collidable> gameObjects = references[head.x + deltas[0]][head.y + deltas[1]].gameObjects;
+            ArrayList<Collidable> gameObjects = references[head.x][head.y].gameObjects;
             if (!gameObjects.isEmpty()) {
                 for (Collidable gameObject: gameObjects) {
                     switch (gameObject.getName()) {
@@ -41,8 +39,6 @@ public class SnakeController {
                             gameObjectsToRemove.add(snake);
                             break;
                         case "Frog": case "Fruit":
-                            System.out.flush();
-                            System.out.println("hit Fruit");
                             this.nextMoveGrows = true;
                             gameObjectsToRemove.add(gameObject);
                             break;
