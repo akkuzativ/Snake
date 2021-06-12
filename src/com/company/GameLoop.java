@@ -115,8 +115,7 @@ public class GameLoop extends Thread{
             // TODO
             try {
                 Thread.sleep(100);
-            } catch (Exception e) {
-            }
+            } catch (Exception e) { }
             // !!!!!!!!!!!!!!!!!!!
             removeGameObjects();
             updateState();
