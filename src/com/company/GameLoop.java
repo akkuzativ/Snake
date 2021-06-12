@@ -94,7 +94,9 @@ public class GameLoop extends Thread{
         this.gameObjectThreads.add(new EnemySnakeThread(this.board));
         this.gameObjectThreads.add(new PlayerSnakeThread(this.board, this.keyboardHandler));
         this.gameObjectThreads.add(new FruitsAndFrogsGeneratorThread(this.board));
-
+        for (Frog frog : this.board.getFrogs()) {
+            this.gameObjectThreads.add(new FrogThread(this.board, frog));
+        }
         for (GameObjectThread gameObjectThread : this.gameObjectThreads) {
             gameObjectThread.start();
         }

@@ -149,6 +149,9 @@ public class BFSalgorithm {
         for (int i=0; i < this.board.getWidth(); i++) {
             for (int j=0; j < this.board.getHeight(); j++) {
                 outputMatrix[j][i] = snakeDistances[j][i] - frogDistances[j][i];
+                if (this.boardTiles[j][i] == BoardTile.FROG) {
+                    outputMatrix[j][i] = 0;
+                }
 //                System.out.printf("%4d", outputMatrix[j][i]);
             }
 //            System.out.println();
