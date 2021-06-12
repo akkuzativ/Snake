@@ -13,6 +13,8 @@ public class GameFrame extends JFrame implements ActionListener {
     final HighScorePanel highScorePanel = new HighScorePanel(this);
     Board board;
     GameLoop gameLoop;
+    String highScoreFileName = "HighScore.txt";
+    HighScore highScoreRecords = new HighScore();
 
     GameFrame(Dimension size) {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -23,6 +25,7 @@ public class GameFrame extends JFrame implements ActionListener {
             panel.setVisible(true);
         }
         setContentPane(menuPanel);
+        highScoreRecords.readFromFile(highScoreFileName);
     }
 
     @Override
@@ -48,6 +51,7 @@ public class GameFrame extends JFrame implements ActionListener {
                 break;
             case "HIGH_SCORE":
                 panelToDisplay = highScorePanel;
+                highScoreRecords.writeToFile(highScoreFileName);
                 break;
             case "QUIT":
                 dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
