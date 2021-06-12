@@ -125,7 +125,7 @@ public class BoardGenerator {
             Coordinates endPoint = new Coordinates(startingPoint.x + deltaX * (segmentLength - 1),
                                                    startingPoint.y + deltaY * (segmentLength - 1));
 
-            isRoomForSegment = areAllCoordinatesFree(startingPoint, endPoint, 10);
+            isRoomForSegment = areAllCoordinatesFree(startingPoint, endPoint, 3);
 
             if (isRoomForSegment) {
                 for (int i = 0; i < segmentLength; i++) {

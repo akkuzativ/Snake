@@ -109,13 +109,9 @@ public class GameLoop extends Thread{
 
         //render();
         while (!gameOver) {
-            //
             for (GameObjectThread gameObjectThread : this.gameObjectThreads) {
                 gameObjectThread.startCalculatingNextAction();
             }
-            //removeGameObjects();
-
-            //removeGameObjects();
             // !!!!!!!!!!!!!!!!!!!
             // TODO
             try {
@@ -124,10 +120,8 @@ public class GameLoop extends Thread{
             }
             // !!!!!!!!!!!!!!!!!!!
             removeGameObjects();
-
             updateState();
             removeGameObjects();
-            //removeGameObjects();
             render();
         }
         for (GameObjectThread gameObjectThread: gameObjectThreads) {

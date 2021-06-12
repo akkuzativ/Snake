@@ -9,7 +9,6 @@ import java.awt.event.WindowEvent;
 public class GameFrame extends JFrame implements ActionListener {
     final MenuPanel menuPanel = new MenuPanel(this);
     final BoardPanel boardPanel = new BoardPanel(true);
-    final SettingsPanel settingsPanel = new SettingsPanel(this);
     final GameOverPanel gameOverPanel = new GameOverPanel(this);
     final HighScorePanel highScorePanel = new HighScorePanel(this);
     Board board;
@@ -19,7 +18,7 @@ public class GameFrame extends JFrame implements ActionListener {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(size);
         setVisible(true);
-        JPanel[] panels = {menuPanel, boardPanel, settingsPanel, gameOverPanel, highScorePanel};
+        JPanel[] panels = {menuPanel, boardPanel, gameOverPanel, highScorePanel};
         for (JPanel panel: panels) {
             panel.setVisible(true);
         }
@@ -34,9 +33,10 @@ public class GameFrame extends JFrame implements ActionListener {
                 try {
                     int fruitCount = 3;
                     int frogCount = 1;
-                    BoardGenerator boardGenerator = new BoardGenerator(50, 50, fruitCount, frogCount,0,
+                    BoardGenerator boardGenerator = new BoardGenerator(50, 50, fruitCount, frogCount,2,
                                                           10, 20, 3);
                     board = boardGenerator.generateBoard();
+                    boardPanel.setCurrentBoard(board);
                     gameLoop = new GameLoop(board, boardPanel, this);
                     setContentPane(boardPanel);
                     gameLoop.start();
@@ -45,9 +45,6 @@ public class GameFrame extends JFrame implements ActionListener {
                     return;
                 }
                 panelToDisplay = boardPanel;
-                break;
-            case "SETTINGS":
-                panelToDisplay = settingsPanel;
                 break;
             case "HIGH_SCORE":
                 panelToDisplay = highScorePanel;
