@@ -13,10 +13,16 @@ public class FrogAI implements AI {
 
     public Direction getNextMoveDirection() {
         BFSalgorithm bfs = new BFSalgorithm(board);
-        ArrayList<Coordinates> path = bfs.getLongestFrogPath(bfs.createFrogMatrix(this.frog), this.frog);
-        Coordinates nextMove = path.get(1);
-        Coordinates currentPosition = this.frog.getCoordinates();
-        int[] deltas = {nextMove.x - currentPosition.x, nextMove.y - currentPosition.y};
-        return DirectionUtilities.getDirection(deltas);
+        Direction nextDirection;
+        try {
+            ArrayList<Coordinates> path = bfs.getLongestFrogPath(bfs.createFrogMatrix(this.frog), this.frog);
+            Coordinates nextMove = path.get(1);
+            Coordinates currentPosition = this.frog.getCoordinates();
+            int[] deltas = {nextMove.x - currentPosition.x, nextMove.y - currentPosition.y};
+            nextDirection = DirectionUtilities.getDirection(deltas);
+        } catch (Exception e) {
+            nextDirection = DirectionUtilities.getRandomDirection();
+        }
+        return nextDirection;
     }
 }
