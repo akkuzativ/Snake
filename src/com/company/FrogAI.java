@@ -1,44 +1,53 @@
 package com.company;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 public class FrogAI implements AI {
     private Board board;
     private Frog frog;
     private final Random rand;
+    private BFSalgorithm bfs;
 
     FrogAI(Board board, Frog frog) {
         this.board = board;
         this.frog = frog;
         this.rand = new Random();
+        this.bfs = new BFSalgorithm(board);
     }
 
     public Direction getNextMoveDirection() {
-        BFSalgorithm bfs = new BFSalgorithm(board);
-        if (this.rand.nextInt(20) <= 1) {
-            Direction direction = DirectionUtilities.getRandomDirection();
-            int[] deltas = DirectionUtilities.getDeltas(direction);
-//            TODO: sprawdzanie czy następny to wąż
-            int nextXCoordinate = this.frog.getCoordinates().x + deltas[0];
-            int nextYCoordinate = this.frog.getCoordinates().y + deltas[1];
-            if (nextXCoordinate < 0 || nextXCoordinate > this.board.getWidth() ||
-                nextYCoordinate < 0 || nextYCoordinate > this.board.getHeight()) {
-                return DirectionUtilities.getOppositeDirection(direction);
-            }
-            return direction;
-        }
         Direction nextDirection;
-        try {
-            ArrayList<Coordinates> path = bfs.getLongestFrogPath(bfs.createFrogMatrix(this.frog), this.frog);
-            Coordinates nextMove = path.get(1);
-            Coordinates currentPosition = this.frog.getCoordinates();
-            int[] deltas = {nextMove.x - currentPosition.x, nextMove.y - currentPosition.y};
-            nextDirection = DirectionUtilities.getDirection(deltas);
-        } catch (Exception e) {
-//            TODO: losowy ale legalny ruch
-            nextDirection = DirectionUtilities.getRandomDirection();
+
+        if (this.rand.nextInt(30) <= 1) {
+            nextDirection = getRandomLegalDirection();
+        } else {
+            try {
+                ArrayList<Coordinates> path = this.bfs.getLongestFrogPath(this.bfs.createFrogMatrix(this.frog), this.frog);
+                Coordinates nextMove = path.get(1);
+                Coordinates currentPosition = this.frog.getCoordinates();
+                int[] deltas = {nextMove.x - currentPosition.x, nextMove.y - currentPosition.y};
+                nextDirection = DirectionUtilities.getDirection(deltas);
+            } catch (Exception e) {
+                nextDirection = getRandomLegalDirection();
+            }
         }
         return nextDirection;
+    }
+
+    private Direction getRandomLegalDirection() {
+        ArrayList<Direction> directions = new ArrayList<>(List.of(Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT));
+        Collections.shuffle(directions);
+        for (Direction direction : directions) {
+            int[] deltas = DirectionUtilities.getDeltas(direction);
+            int nextXCoordinate = this.frog.getCoordinates().x + deltas[0];
+            int nextYCoordinate = this.frog.getCoordinates().y + deltas[1];
+            if (this.bfs.areCoordinatesUnoccupiedAndInBoundsForFrog(new Coordinates(nextXCoordinate, nextYCoordinate))) {
+                return direction;
+            }
+        }
+        return DirectionUtilities.getRandomDirection();
     }
 }

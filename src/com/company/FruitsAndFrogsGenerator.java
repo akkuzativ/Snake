@@ -29,9 +29,9 @@ public class FruitsAndFrogsGenerator {
     }
 
     public ArrayList<Fruit> generateMissingFruitsList() {
-        int missingFruitsNumber = fruitCount - this.board.getFruits().size();
+        int missingFruitsNumber = this.fruitCount - this.board.getFruits().size();
         ArrayList<Fruit> missingFruits = new ArrayList<>();
-        for (int i = 0; i < this.rand.nextInt(missingFruitsNumber + 1); i++) {
+        for (int i = 0; i < this.rand.nextInt(Math.max(0, missingFruitsNumber + 1)); i++) {
             missingFruits.add(new Fruit(generateUnoccupiedCoordinates(0, this.board.getWidth(),
                     0, this.board.getHeight())));
         }
@@ -39,9 +39,9 @@ public class FruitsAndFrogsGenerator {
     }
 
     public ArrayList<Frog> generateMissingFrogsList() {
-        int missingFrogsNumber = frogCount - this.board.getFrogs().size();
+        int missingFrogsNumber = this.frogCount - this.board.getFrogs().size();
         ArrayList<Frog> missingFrogs = new ArrayList<>();
-        for (int i = 0; i < this.rand.nextInt(missingFrogsNumber + 1); i++) {
+        for (int i = 0; i < this.rand.nextInt(Math.max(0, missingFrogsNumber + 1)); i++) {
             missingFrogs.add(new Frog(generateUnoccupiedCoordinates(0, this.board.getWidth(),
                     0, this.board.getHeight())));
         }

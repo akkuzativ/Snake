@@ -29,7 +29,7 @@ public class BFSalgorithm {
                 targetCoordinates = currentCoordinates;
                 break;
             }
-            for (Coordinates neighbor : getNeighboringCoordinates(currentCoordinates)) {
+            for (Coordinates neighbor : getNeighboringCoordinates(currentCoordinates,BoardTile.ENEMY_SNAKE_HEAD)) {
                 if (!visitedCoordinates[neighbor.x][neighbor.y]) {
                     visitedCoordinates[neighbor.x][neighbor.y] = true;
                     boardCoordinatesQueue.add(neighbor);
@@ -51,7 +51,7 @@ public class BFSalgorithm {
         }
         while (!boardCoordinatesQueue.isEmpty()) {
             Coordinates currentCoordinates = boardCoordinatesQueue.poll();
-            for (Coordinates neighbor : getNeighboringCoordinates(currentCoordinates)) {
+            for (Coordinates neighbor : getNeighboringCoordinates(currentCoordinates, BoardTile.FROG)) {
                 if (!visitedCoordinates[neighbor.x][neighbor.y]) {
                     visitedCoordinates[neighbor.x][neighbor.y] = true;
                     distancesMatrix[neighbor.x][neighbor.y] = distancesMatrix[currentCoordinates.x][currentCoordinates.y] + 1;
@@ -85,7 +85,7 @@ public class BFSalgorithm {
 
         while (!boardCoordinatesQueue.isEmpty()) {
             Coordinates currentCoordinates = boardCoordinatesQueue.poll();
-            for (Coordinates neighbor : getNeighboringCoordinates(currentCoordinates)) {
+            for (Coordinates neighbor : getNeighboringCoordinates(currentCoordinates, BoardTile.FROG)) {
                 if (!visitedCoordinates[neighbor.x][neighbor.y] && frogMatrix[neighbor.x][neighbor.y] > 0) {
                     visitedCoordinates[neighbor.x][neighbor.y] = true;
                     boardCoordinatesQueue.add(neighbor);
@@ -97,7 +97,7 @@ public class BFSalgorithm {
         return recreatePath(previousCoordinates, startingPoint, targetCoordinates);
     }
 
-    private ArrayList<Coordinates> getNeighboringCoordinates(Coordinates coordinates) {
+    private ArrayList<Coordinates> getNeighboringCoordinates(Coordinates coordinates, BoardTile boardTile) {
         ArrayList<Coordinates> potentialNeighbors = new ArrayList<>();
         ArrayList<Coordinates> neighbors = new ArrayList<>();
         potentialNeighbors.add(new Coordinates(coordinates.x , coordinates.y - 1));
@@ -106,17 +106,36 @@ public class BFSalgorithm {
         potentialNeighbors.add(new Coordinates(coordinates.x + 1, coordinates.y));
 
         for (Coordinates potentialNeighbor : potentialNeighbors) {
-            if (areCoordinatesUnoccupiedAndInBounds(potentialNeighbor)) {
+            if (areCoordinatesUnoccupiedAndInBounds(potentialNeighbor, boardTile)) {
                 neighbors.add(potentialNeighbor);
             }
         }
         return neighbors;
     }
 
-    private boolean areCoordinatesUnoccupiedAndInBounds(Coordinates coordinates) {
+    public boolean areCoordinatesUnoccupiedAndInBounds(Coordinates coordinates, BoardTile boardTile) {
+        boolean output = false;
+        if (boardTile == BoardTile.ENEMY_SNAKE_HEAD) {
+            output = areCoordinatesUnoccupiedAndInBoundsForSnake(coordinates);
+        } else if (boardTile == BoardTile.FROG) {
+            output = areCoordinatesUnoccupiedAndInBoundsForFrog(coordinates);
+        }
+        return output;
+    }
+
+    public boolean areCoordinatesUnoccupiedAndInBoundsForSnake(Coordinates coordinates) {
         ArrayList<BoardTile> obstacles = new ArrayList<>(List.of(
                 BoardTile.SNAKE, BoardTile.SNAKE_HEAD,
                 BoardTile.ENEMY_SNAKE, BoardTile.ENEMY_SNAKE_HEAD, BoardTile.OBSTACLE));
+        return coordinates.x >= 0 && coordinates.y >= 0 &&
+                coordinates.x < this.board.getWidth() && coordinates.y < this.board.getHeight() &&
+                !obstacles.contains(this.boardTiles[coordinates.x][coordinates.y]);
+    }
+
+    public boolean areCoordinatesUnoccupiedAndInBoundsForFrog(Coordinates coordinates) {
+        ArrayList<BoardTile> obstacles = new ArrayList<>(List.of(
+                BoardTile.SNAKE, BoardTile.SNAKE_HEAD,
+                BoardTile.ENEMY_SNAKE, BoardTile.ENEMY_SNAKE_HEAD, BoardTile.OBSTACLE, BoardTile.FRUIT, BoardTile.FROG));
         return coordinates.x >= 0 && coordinates.y >= 0 &&
                 coordinates.x < this.board.getWidth() && coordinates.y < this.board.getHeight() &&
                 !obstacles.contains(this.boardTiles[coordinates.x][coordinates.y]);
