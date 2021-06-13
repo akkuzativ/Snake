@@ -135,6 +135,19 @@ public class GameLoop extends Thread{
             gameObjectThread.forceKill();
         }
 
+        for (GameObjectThread gameObjectThread: gameObjectThreads) {
+            try {
+                if (gameObjectThread.getRelatedGameObject().getName().equals("Frog")) {
+                    System.out.println(gameObjectThread.getRelatedGameObject());
+                    System.out.println("------");
+                }
+            }
+            catch (Exception e) {
+                System.out.println(gameObjectThread.getClass());
+            }
+
+        }
+
         gameObjectThreads.clear();
         //ActionEvent gameOverEvent = new ActionEvent(this, ActionEvent.ACTION_FIRST, "GAME_OVER");
         //gameFrame.event

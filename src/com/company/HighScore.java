@@ -50,7 +50,6 @@ public class HighScore {
 
     public void readFromFile(String filename) {
         File inputFile = new File(filename).getAbsoluteFile();
-        System.out.println(inputFile.canRead());
         FileInputStream inputStream;
 ;        try {
             inputStream = new FileInputStream(inputFile);
