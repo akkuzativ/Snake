@@ -3,14 +3,18 @@ package com.company;
 import java.util.ArrayList;
 
 public class SnakeAI implements AI {
-    private Board board;
-    private Snake snake;
+    private final Board board;
+    private final Snake snake;
 
     SnakeAI(Board board, Snake snake) {
         this.board = board;
         this.snake = snake;
     }
 
+    /***
+     * Gets the next snake move direction selected by the BFS algorithm or generated randomly
+     * @return selected next snake move direction
+     */
     public Direction getNextMoveDirection() {
         BFSalgorithm bfs = new BFSalgorithm(board);
         Direction nextDirection;

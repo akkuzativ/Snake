@@ -169,16 +169,12 @@ public class Board {
             Arrays.fill(row, BoardTile.EMPTY);
         }
 
-        if (!this.frogs.isEmpty()){
-            for (Frog frog: this.frogs) {
-                tiles[frog.getCoordinates().x][frog.getCoordinates().y] = BoardTile.FROG;
-            }
+        for (Frog frog: this.frogs) {
+            tiles[frog.getCoordinates().x][frog.getCoordinates().y] = BoardTile.FROG;
         }
 
-        if (!this.fruits.isEmpty()){
-            for (Fruit fruit: fruits) {
-                tiles[fruit.getCoordinates().x][fruit.getCoordinates().y] = BoardTile.FRUIT;
-            }
+        for (Fruit fruit: fruits) {
+            tiles[fruit.getCoordinates().x][fruit.getCoordinates().y] = BoardTile.FRUIT;
         }
 
         if (this.playerSnake != null) {
