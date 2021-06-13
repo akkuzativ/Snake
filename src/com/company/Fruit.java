@@ -15,4 +15,8 @@ public class Fruit implements Collidable{
         this.coordinates.x = coordinates.x;
         this.coordinates.y = coordinates.y;
     }
+
+    public String getName() {
+        return "Fruit";
+    }
 }

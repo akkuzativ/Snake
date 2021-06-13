@@ -137,8 +137,12 @@ public class BFSalgorithm {
 
     public int[][] createFrogMatrix(Frog frog) {
         ArrayList<Coordinates> snakeHeads = new ArrayList<>();
-        snakeHeads.add(this.board.getEnemySnake().getSnakeHead());
-        snakeHeads.add(this.board.getPlayerSnake().getSnakeHead());
+        try {
+            snakeHeads.add(this.board.getEnemySnake().getSnakeHead());
+            snakeHeads.add(this.board.getPlayerSnake().getSnakeHead());
+        } catch (Exception e) {
+            snakeHeads.add(this.board.getPlayerSnake().getSnakeHead());
+        }
         int[][] snakeDistances = getDistancesMatrix(snakeHeads);
 
         ArrayList<Coordinates> frogList = new ArrayList<>();
@@ -149,6 +153,9 @@ public class BFSalgorithm {
         for (int i=0; i < this.board.getWidth(); i++) {
             for (int j=0; j < this.board.getHeight(); j++) {
                 outputMatrix[j][i] = snakeDistances[j][i] - frogDistances[j][i];
+                if (this.boardTiles[j][i] == BoardTile.FROG) {
+                    outputMatrix[j][i] = 0;
+                }
 //                System.out.printf("%4d", outputMatrix[j][i]);
             }
 //            System.out.println();

@@ -24,4 +24,8 @@ public class Frog implements Collidable{
     public void setMoveDirection(Direction moveDirection) {
         this.moveDirection = moveDirection;
     }
+
+    public String getName() {
+        return "Frog";
+    }
 }

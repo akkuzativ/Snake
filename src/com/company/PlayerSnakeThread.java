@@ -1,5 +1,7 @@
 package com.company;
 
+import java.util.ArrayList;
+
 public class PlayerSnakeThread extends Thread implements GameObjectThread {
     private Board board;
     private SnakeAI snakeAI;
@@ -7,6 +9,8 @@ public class PlayerSnakeThread extends Thread implements GameObjectThread {
     private boolean canCalculateNextAction = false;
     private Direction nextAction;
     private KeyboardHandler keyboardHandler;
+    private ArrayList<Collidable> gameObjectsToRemove = new ArrayList<>();
+    private boolean killed = false;
 
     PlayerSnakeThread(Board board, KeyboardHandler keyboardHandler) {
         this.board = board;
@@ -18,9 +22,11 @@ public class PlayerSnakeThread extends Thread implements GameObjectThread {
     @Override
     public void run() {
         while (true) {
+            if (board.getPlayerSnake() == null || killed) {
+                break;
+            }
             if (this.canCalculateNextAction) {
                 this.nextAction = this.board.getPlayerSnake().getMoveDirection();
-                System.out.println("recently pressed key: " + keyboardHandler.getRecentlyPressedKey());
                 switch (this.keyboardHandler.getRecentlyPressedKey()) {
                     case UP:
                         this.nextAction = Direction.UP;
@@ -37,7 +43,6 @@ public class PlayerSnakeThread extends Thread implements GameObjectThread {
                     default:
                         break;
                 }
-                System.out.println("nextAction: " + nextAction);
                 this.canCalculateNextAction = false;
             }
             try {
@@ -60,5 +65,21 @@ public class PlayerSnakeThread extends Thread implements GameObjectThread {
         catch (IncorrectDirectionException ignored) {
         }
         this.snakeController.move();
+        gameObjectsToRemove = snakeController.handleCollisions();
+    }
+
+    @Override
+    public ArrayList<Collidable> getGameObjectsToRemove() {
+        return gameObjectsToRemove;
+    }
+
+    @Override
+    public Collidable getRelatedGameObject() {
+        return board.getPlayerSnake();
+    }
+
+    @Override
+    public void forceKill() {
+        killed = true;
     }
 }

@@ -1,6 +1,14 @@
 package com.company;
 
+import org.w3c.dom.events.Event;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 public class GameLoop extends Thread{
     final Board board;
@@ -20,6 +28,7 @@ public class GameLoop extends Thread{
     ArrayList<Fruit> fruits;
     ArrayList<Coordinates> obstacles;
     ArrayList<GameObjectThread> gameObjectThreads = new ArrayList<>();
+
 
     GameLoop(Board board, BoardPanel boardPanel, GameFrame gameFrame){
         this.board = board;
@@ -48,6 +57,12 @@ public class GameLoop extends Thread{
         for (GameObjectThread gameObjectThread : this.gameObjectThreads) {
             gameObjectThread.performNextAction();
         }
+        if (snake != null) {
+            currentScore = snake.getSnakeBody().size() + 1;
+        }
+        if (board.getPlayerSnake() == null) {
+            gameOver = true;
+        }
     }
 
     private void render() {
@@ -56,44 +71,85 @@ public class GameLoop extends Thread{
         this.gameFrame.repaint();
     }
 
+    private void removeGameObjects() {
+        Set<Collidable> gameObjectsToRemove = new HashSet<Collidable>();
+        for (GameObjectThread gameObjectThread : this.gameObjectThreads) {
+            gameObjectsToRemove.addAll(gameObjectThread.getGameObjectsToRemove());
+        }
+        gameObjectsToRemove.removeIf(Objects::isNull);
+        if (!gameObjectsToRemove.isEmpty()) {
+            for (Collidable gameObject: gameObjectsToRemove) {
+                board.removeGameObject(gameObject);
+            }
+        }
+        gameObjectThreads.removeIf( gameObjectThread -> gameObjectThread.getRelatedGameObject() == null );
+    }
+
+    private void cleanUpAndExit() {
+
+    }
+
     public void run() {
         boardPanel.setCurrentBoard(board);
-        // TODO: Dodać pozostałe wątki
-        //this.gameObjectThreads.add(new EnemySnakeThread(this.board));
+        this.gameObjectThreads.add(new EnemySnakeThread(this.board));
         this.gameObjectThreads.add(new PlayerSnakeThread(this.board, this.keyboardHandler));
+        this.gameObjectThreads.add(new FruitsAndFrogsGeneratorThread(this.board));
         for (Frog frog : this.board.getFrogs()) {
             this.gameObjectThreads.add(new FrogThread(this.board, frog));
         }
-        //this.gameObjectThreads.add(new FruitsAndFrogsGeneratorThread(this.board));
-
         for (GameObjectThread gameObjectThread : this.gameObjectThreads) {
             gameObjectThread.start();
         }
 
-        while (true) {
-            if (this.notPaused) {
-                this.render();
+        //render();
+        while (!gameOver) {
+            for (Frog frog : this.board.getMissingFrogs()) {
+                GameObjectThread gameObjectThread = new FrogThread(this.board, frog);
+                this.gameObjectThreads.add(gameObjectThread);
+                gameObjectThread.start();
+            }
+            this.board.clearMissingFrogs();
 
-                for (GameObjectThread gameObjectThread : this.gameObjectThreads) {
-                    gameObjectThread.startCalculatingNextAction();
-                }
-
-                // !!!!!!!!!!!!!!!!!!!
-                // TODO
-                try {
-                    Thread.sleep(160);
-                } catch (Exception e) {
-                }
-                // !!!!!!!!!!!!!!!!!!!
-
-//                processInput();
-
-                updateState();
-
-                if (this.gameOver) {
-                    break;
-                }
+            for (GameObjectThread gameObjectThread : this.gameObjectThreads) {
+                gameObjectThread.startCalculatingNextAction();
+            }
+            // !!!!!!!!!!!!!!!!!!!
+            // TODO
+            try {
+                Thread.sleep(100);
+            } catch (Exception e) { }
+            // !!!!!!!!!!!!!!!!!!!
+            removeGameObjects();
+            updateState();
+            removeGameObjects();
+            render();
+        }
+        for (GameObjectThread gameObjectThread: gameObjectThreads) {
+            if (gameObjectThread.getRelatedGameObject().getName().equals("Frog")) {
+                System.out.println(gameObjectThread.getRelatedGameObject());
+                System.out.println("------");
             }
         }
+
+        for (GameObjectThread gameObjectThread: gameObjectThreads) {
+            gameObjectThread.forceKill();
+        }
+
+        for (GameObjectThread gameObjectThread: gameObjectThreads) {
+            try {
+                if (gameObjectThread.getRelatedGameObject().getName().equals("Frog")) {
+                    System.out.println(gameObjectThread.getRelatedGameObject());
+                    System.out.println("------");
+                }
+            }
+            catch (Exception e) {
+                System.out.println(gameObjectThread.getClass());
+            }
+
+        }
+
+        gameObjectThreads.clear();
+        //ActionEvent gameOverEvent = new ActionEvent(this, ActionEvent.ACTION_FIRST, "GAME_OVER");
+        //gameFrame.event
     }
 }

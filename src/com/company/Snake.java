@@ -34,4 +34,8 @@ public class Snake implements Collidable{
     public Direction getMoveDirection() {
         return moveDirection;
     }
+
+    public String getName() {
+        return "Snake";
+    }
 }
