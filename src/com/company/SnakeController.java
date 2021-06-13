@@ -2,17 +2,28 @@ package com.company;
 
 import java.util.ArrayList;
 
+/***
+ * Class used to control movement of snakes by modifying their coordinates
+ */
 public class SnakeController {
     private Board board;
     private Snake snake;
     private boolean nextMoveGrows;
 
+    /***
+     * SnakeController constructor
+     * @param board related board
+     * @param snake controlled snake
+     */
     SnakeController(Board board, Snake snake) {
         this.board = board;
         this.snake = snake;
         this.nextMoveGrows = false;
     }
 
+    /***
+     * Moves a snake once, based on its direction and whether it has eaten a frog or a fruit
+     */
     public void move() {
         if (!nextMoveGrows) {
             normalMove();
@@ -22,6 +33,10 @@ public class SnakeController {
         }
     }
 
+    /***
+     * Tries to find objects colliding with the snake and returns objects to be removed from the board based on the type of the collision
+     * @return objects to be removed as a consequence of the collision
+     */
     public ArrayList<Collidable> handleCollisions() {
         Coordinates head = snake.getSnakeHead();
         ArrayList<Collidable> gameObjectsToRemove = new ArrayList<>();
