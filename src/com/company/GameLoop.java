@@ -1,17 +1,15 @@
 package com.company;
 
-import org.w3c.dom.events.Event;
-
-import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.WindowEvent;
 import java.sql.Timestamp;
 import java.util.*;
 
+/***
+ * Class representing a thread of gameplay loop. A new thread is run every time a game is started. It's also a point of start for threads controlling game objects.
+ */
 public class GameLoop extends Thread{
     final Board board;
     final BoardPanel boardPanel;
-    int targetFPS = 60;
     boolean notPaused;
     boolean gameOver;
     int currentScore;
@@ -24,10 +22,14 @@ public class GameLoop extends Thread{
     Snake enemySnake;
     ArrayList<Frog> frogs;
     ArrayList<Fruit> fruits;
-    ArrayList<Coordinates> obstacles;
     ArrayList<GameObjectThread> gameObjectThreads = new ArrayList<>();
 
-
+    /***
+     * GameLoop constructor
+     * @param board board used during gameplay
+     * @param boardPanel BoardPanel used to display the changes on board
+     * @param gameFrame GameFrame as a main window for hosting the BoardPanel
+     */
     GameLoop(Board board, BoardPanel boardPanel, GameFrame gameFrame){
         this.board = board;
         this.boardPanel = boardPanel;
@@ -53,6 +55,10 @@ public class GameLoop extends Thread{
         this.currentScore = 0;
     }
 
+    /***
+     * Allows to get player's score after the game has ended
+     * @return player's score
+     */
     public int getLastScore() {
         return currentScore;
     }
@@ -78,7 +84,7 @@ public class GameLoop extends Thread{
     }
 
     private void removeGameObjects() {
-        Set<Collidable> gameObjectsToRemove = new HashSet<Collidable>();
+        Set<Collidable> gameObjectsToRemove = new HashSet<>();
         for (GameObjectThread gameObjectThread : this.gameObjectThreads) {
             gameObjectsToRemove.addAll(gameObjectThread.getGameObjectsToRemove());
         }
@@ -100,6 +106,9 @@ public class GameLoop extends Thread{
         gameFrame.actionPerformed(new ActionEvent(gameFrame, ActionEvent.ACTION_PERFORMED, "GAME_OVER"));
     }
 
+    /***
+     * Procedure executed by the GameLoop thread. It's the main gameplay part of the application. Initializes the main loop, executes the loop until the player has died, updating game objects every frame and renders the effects of the updates on the main window.
+     */
     public void run() {
         boardPanel.setCurrentBoard(board);
         this.gameObjectThreads.add(new EnemySnakeThread(this.board));
