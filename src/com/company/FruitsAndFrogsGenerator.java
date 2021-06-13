@@ -7,15 +7,16 @@ public class FruitsAndFrogsGenerator {
     private final Board board;
     private final int fruitCount;
     private final int frogCount;
+    private Random rand;
 
     FruitsAndFrogsGenerator(Board board, int fruitCount, int frogCount) {
         this.board = board;
         this.fruitCount = fruitCount;
         this.frogCount = frogCount;
+        this.rand = new Random();
     }
 
     private Coordinates generateUnoccupiedCoordinates(int minX, int maxX, int minY, int maxY) {
-        Random rand = new Random();
         int xCoordinate = minX + rand.nextInt(maxX - minX);
         int yCoordinate = minY + rand.nextInt(maxY - minY);
         BoardTile[][] boardTiles = this.board.toTiles();
@@ -30,7 +31,7 @@ public class FruitsAndFrogsGenerator {
     public ArrayList<Fruit> generateMissingFruitsList() {
         int missingFruitsNumber = fruitCount - this.board.getFruits().size();
         ArrayList<Fruit> missingFruits = new ArrayList<>();
-        for (int i = 0; i < missingFruitsNumber; i++) {
+        for (int i = 0; i < this.rand.nextInt(missingFruitsNumber + 1); i++) {
             missingFruits.add(new Fruit(generateUnoccupiedCoordinates(0, this.board.getWidth(),
                     0, this.board.getHeight())));
         }
@@ -40,7 +41,7 @@ public class FruitsAndFrogsGenerator {
     public ArrayList<Frog> generateMissingFrogsList() {
         int missingFrogsNumber = frogCount - this.board.getFrogs().size();
         ArrayList<Frog> missingFrogs = new ArrayList<>();
-        for (int i = 0; i < missingFrogsNumber; i++) {
+        for (int i = 0; i < this.rand.nextInt(missingFrogsNumber + 1); i++) {
             missingFrogs.add(new Frog(generateUnoccupiedCoordinates(0, this.board.getWidth(),
                     0, this.board.getHeight())));
         }

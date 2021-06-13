@@ -22,9 +22,10 @@ public class BFSalgorithm {
 
         while (!boardCoordinatesQueue.isEmpty()) {
             Coordinates currentCoordinates = boardCoordinatesQueue.poll();
-
-            if (boardTiles[currentCoordinates.x][currentCoordinates.y] == BoardTile.FROG ||
-                boardTiles[currentCoordinates.x][currentCoordinates.y] == BoardTile.FRUIT) {
+            if (boardTiles[currentCoordinates.x][currentCoordinates.y] == BoardTile.FRUIT) {
+                targetCoordinates = currentCoordinates;
+                break;
+            } else if (boardTiles[currentCoordinates.x][currentCoordinates.y] == BoardTile.FROG) {
                 targetCoordinates = currentCoordinates;
                 break;
             }
@@ -153,7 +154,7 @@ public class BFSalgorithm {
         for (int i=0; i < this.board.getWidth(); i++) {
             for (int j=0; j < this.board.getHeight(); j++) {
                 outputMatrix[j][i] = snakeDistances[j][i] - frogDistances[j][i];
-                if (this.boardTiles[j][i] == BoardTile.FROG) {
+                if (this.boardTiles[j][i] == BoardTile.FROG || this.boardTiles[j][i] == BoardTile.FRUIT) {
                     outputMatrix[j][i] = 0;
                 }
 //                System.out.printf("%4d", outputMatrix[j][i]);
