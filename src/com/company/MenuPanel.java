@@ -4,12 +4,19 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 
+/***
+ * Panel used to display the main menu of the game
+ */
 public class MenuPanel extends JPanel{
     JLabel titleLabel = new JLabel("Snake");
     JButton startButton = new JButton("Start");
     JButton highScoreButton = new JButton("High-Score");
     JButton quitButton = new JButton("Quit");
 
+    /***
+     * MenuPanel constructor
+     * @param actionListener Listener to button events (class GameFrame required because of type cast inside)
+     */
     MenuPanel(ActionListener actionListener) {
         GameFrame gameFrame = (GameFrame) actionListener;
 

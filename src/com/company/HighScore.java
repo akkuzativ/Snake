@@ -4,32 +4,39 @@ import java.util.ArrayList;
 import java.io.*;
 import java.util.Comparator;
 
+/***
+ * Acts as a wrapper for a list of records
+ */
 public class HighScore {
+    /***
+     * Represents a high score record combined of a player's name and their score
+     */
     public static class HighScoreRecord {
-        private String name;
-        private int score;
+        private final String name;
+        private final int score;
 
+        /***
+         * HighScoreRecord constructor
+         * @param name player's name
+         * @param score player's score
+         */
         HighScoreRecord(String name, int score) {
             this.name = name;
             this.score = score;
         }
 
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
+        /***
+         * Gets score
+         * @return score inside the record
+         */
         public int getScore() {
             return score;
         }
 
-        public void setScore(int score) {
-            this.score = score;
-        }
-
+        /***
+         * Represents the record as a formatted string
+         * @return formatted string representing the record
+         */
         @Override
         public String toString() {
             return (name + " " + score);
@@ -37,30 +44,43 @@ public class HighScore {
     }
 
     private ArrayList<HighScoreRecord> records = new ArrayList<>();
-    private String saveFileName;
+    private final String saveFileName;
 
+    /***
+     * Highscore constructor
+     * @param saveFileName file associated with the record for the IO operations
+     */
     HighScore(String saveFileName) {
         this.saveFileName = saveFileName;
     }
 
+    /***
+     * Gets the ArrayList of records
+     * @return ArrayList of records
+     */
     public ArrayList<HighScoreRecord> getRecords() {
         return records;
     }
 
+    /***
+     * Adds a specified record to the list of records
+     * @param record record to add
+     */
     public void addRecord(HighScoreRecord record) {
         records.add(record);
         records.sort(Comparator.comparingInt(HighScoreRecord::getScore).reversed());
     }
 
+    /***
+     * Tries to read records from the associated file
+     */
     public void readFromFile() {
-        String filename = saveFileName;
-        File inputFile = new File(filename).getAbsoluteFile();
+        File inputFile = new File(saveFileName).getAbsoluteFile();
         FileInputStream inputStream;
-;        try {
+        try {
             inputStream = new FileInputStream(inputFile);
         }
         catch (Exception e) {
-            System.out.println("asdasd");
             return;
         }
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
@@ -103,9 +123,11 @@ public class HighScore {
         catch (IOException e) {}
     }
 
+    /***
+     * Tries to write the records to the associated file
+     */
     public void writeToFile() {
-        String filename = saveFileName;
-        File outputFile = new File(filename);
+        File outputFile = new File(saveFileName);
         FileOutputStream outputStream;
         if (!outputFile.exists()) {
             try {

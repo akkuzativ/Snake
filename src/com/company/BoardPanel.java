@@ -7,7 +7,9 @@ import java.awt.geom.RectangularShape;
 import java.awt.geom.RoundRectangle2D;
 import java.util.HashMap;
 
-
+/***
+ * Panel used to display the current state of board during gameplay
+ */
 public class BoardPanel extends JPanel{
     private final HashMap<BoardTile, Color> colorMapping = new HashMap<>() {{
         put(BoardTile.EMPTY, Color.BLACK);
@@ -22,19 +24,35 @@ public class BoardPanel extends JPanel{
     boolean drawGrid;
     private Board currentBoard;
 
+    /***
+     * Board panel constructor
+     * @param drawGrid Visually separate tiles
+     */
     public BoardPanel(boolean drawGrid) {
         this.drawGrid = drawGrid;
         setVisible(true);
     }
 
+    /***
+     * Gets current board
+     * @return current board
+     */
     public Board getCurrentBoard() {
         return currentBoard;
     }
 
+    /***
+     * Sets current board
+     * @param board board to set
+     */
     public void setCurrentBoard(Board board) {
         this.currentBoard = board;
     }
 
+    /***
+     * Paints the board as a grid of colored tiles
+     * @param g abstract class used as a graphical context for drawing
+     */
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);

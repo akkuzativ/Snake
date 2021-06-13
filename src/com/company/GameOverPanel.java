@@ -4,8 +4,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
+/***
+ * Panel displayed when the player dies
+ */
 public class GameOverPanel extends JPanel implements ActionListener{
     JButton menuButton = new JButton("Back to Menu");
     JButton quitButton = new JButton("Quit");
@@ -17,6 +19,10 @@ public class GameOverPanel extends JPanel implements ActionListener{
     private int score = 0;
     private HighScore records;
 
+    /***
+     * GameOverPanel constructor
+     * @param actionListener Listener to button events Listener to button events (class GameFrame required because of type cast inside)
+     */
     GameOverPanel(ActionListener actionListener) {
         menuButton.setActionCommand("MENU");
         quitButton.setActionCommand("QUIT");
@@ -55,6 +61,10 @@ public class GameOverPanel extends JPanel implements ActionListener{
                 (int)(gameFrame.getHeight()*0.05), (int)(gameFrame.getWidth()*0.1)));
     }
 
+    /***
+     * Handles reactions to events (only clear button click)
+     * @param e Heard event
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("SAVE")) {
@@ -72,16 +82,27 @@ public class GameOverPanel extends JPanel implements ActionListener{
         }
     }
 
+    /***
+     * Allows GameOverPanel to access player's score
+     * @param score score to access
+     */
     public void setScore(int score) {
         this.score = score;
         scoreLabel.setText("Score: " + score);
     }
 
+    /***
+     * Allows GameOverPanel to access common high score records in order to add a new record
+     * @param records High score records to access
+     */
     public void setHighScoreRecords(HighScore records) {
         this.records = records;
 
     }
 
+    /***
+     * Resets the state of GameOverPanel for next use
+     */
     public void reset() {
         saveButton.setEnabled(true);
         saveButton.setEnabled(true);

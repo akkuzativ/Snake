@@ -6,6 +6,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 
+/***
+ * JFrame which serves the purpose of a main window and entry point of the game. Displayes different JPanels depending on the handled event.
+ */
 public class GameFrame extends JFrame implements ActionListener {
     final MenuPanel menuPanel;
     final BoardPanel boardPanel;
@@ -15,6 +18,10 @@ public class GameFrame extends JFrame implements ActionListener {
     GameLoop gameLoop;
     HighScore highScoreRecords = new HighScore("HighScore.txt");
 
+    /***
+     * GameFrame constructor
+     * @param size size of the JFrame (and the window)
+     */
     GameFrame(Dimension size) {
         setSize(size);
         setMinimumSize(size);
@@ -36,6 +43,10 @@ public class GameFrame extends JFrame implements ActionListener {
         highScoreRecords.readFromFile();
     }
 
+    /***
+     * Handles global events from a currently displayed JPanel
+     * @param e heard event
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         JPanel panelToDisplay = null;

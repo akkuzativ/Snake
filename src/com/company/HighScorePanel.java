@@ -5,6 +5,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/***
+ * Panel used to display (and clear) saved high score records.
+ */
 public class HighScorePanel extends JPanel implements ActionListener{
     JButton menuButton = new JButton("Back to Menu");
     JButton clearButton = new JButton("Clear records");
@@ -12,6 +15,10 @@ public class HighScorePanel extends JPanel implements ActionListener{
     HighScore records;
     GameFrame gameFrame;
 
+    /***
+     * Highscore panel constructor
+     * @param actionListener Listener to button events (class GameFrame required because of type cast inside)
+     */
     HighScorePanel(ActionListener actionListener) {
         gameFrame = ((GameFrame)actionListener);
 
@@ -43,6 +50,10 @@ public class HighScorePanel extends JPanel implements ActionListener{
         add(lowerPanel);
     }
 
+    /***
+     * Handles reactions to events (only clear button click)
+     * @param e Heard event
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("CLEAR")) {
@@ -53,6 +64,10 @@ public class HighScorePanel extends JPanel implements ActionListener{
         }
     }
 
+    /***
+     * Allows HighScorePanel to access common highscore records
+     * @param records records to access
+     */
     public void setHighScoreRecords(HighScore records) {
         this.records = records;
         if (records != null) {
@@ -64,6 +79,9 @@ public class HighScorePanel extends JPanel implements ActionListener{
         }
     }
 
+    /***
+     * Resets the state of panel for next use
+     */
     public void reset() {
         clearButton.setEnabled(true);
     }

@@ -4,8 +4,13 @@ import java.awt.event.*;
 import java.util.HashMap;
 import java.util.Objects;
 
-
+/***
+ * Used to read keyboard input and translate it to easier format
+ */
 public class KeyboardHandler implements KeyListener {
+    /***
+     * Used commands
+     */
     enum KeyCommand {
         UP,
         DOWN,
@@ -27,21 +32,35 @@ public class KeyboardHandler implements KeyListener {
         this.recentlyPressedKey = KeyCommand.NOTHING;
     }
 
+    /***
+     * Returns the command associated with the most recently pressed key
+     * @return recently pressed key command
+     */
     public KeyCommand getRecentlyPressedKey() {
         return recentlyPressedKey;
     }
 
-    public void flushRecentlyPressedKey() { recentlyPressedKey = KeyCommand.NOTHING;}
-
+    /***
+     * Fires when a key is pressed
+     * @param e event called on key press
+     */
     @Override
     public void keyPressed(KeyEvent e) {
         recentlyPressedKey = Objects.requireNonNullElse(keyCodeMapping.get(e.getKeyCode()), KeyCommand.NOTHING);
     }
 
+    /***
+     * Fires when a key is released
+     * @param e event called on key release
+     */
     @Override
     public void keyReleased(KeyEvent e) {
     }
 
+    /***
+     * Fires when a key is typed
+     * @param e event called on key type
+     */
     @Override
     public void keyTyped(KeyEvent e) {
     }
