@@ -6,18 +6,20 @@ import java.util.List;
 import java.util.Random;
 
 public class FrogAI implements AI {
-    private Board board;
-    private Frog frog;
+    private final Frog frog;
     private final Random rand;
-    private BFSalgorithm bfs;
+    private final BFSalgorithm bfs;
 
     FrogAI(Board board, Frog frog) {
-        this.board = board;
         this.frog = frog;
         this.rand = new Random();
         this.bfs = new BFSalgorithm(board);
     }
 
+    /***
+     * Gets the next frog move direction selected by the BFS algorithm or generated randomly
+     * @return selected next frog move direction
+     */
     public Direction getNextMoveDirection() {
         Direction nextDirection;
 
@@ -37,6 +39,10 @@ public class FrogAI implements AI {
         return nextDirection;
     }
 
+    /***
+     * Creates a random legal move direction for the frog
+     * @return selected random legal move direction for the frog
+     */
     private Direction getRandomLegalDirection() {
         ArrayList<Direction> directions = new ArrayList<>(List.of(Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT));
         Collections.shuffle(directions);

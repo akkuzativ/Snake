@@ -3,14 +3,19 @@ package com.company;
 import java.util.*;
 
 public class BFSalgorithm {
-    private Board board;
-    private BoardTile[][] boardTiles;
+    private final Board board;
+    private final BoardTile[][] boardTiles;
 
     BFSalgorithm(Board board) {
         this.board = board;
         this.boardTiles = this.board.toTiles();
     }
 
+    /***
+     * Creates shortest snake path to nearest frog or fruit using BFS algorithm
+     * @param startingPoint AI snake head coordinates
+     * @return full path from snake head to nearest frog or fruit
+     */
     public ArrayList<Coordinates> getShortestPathToFrogOrFruit(Coordinates startingPoint) {
         Coordinates targetCoordinates = null;
         boolean[][] visitedCoordinates = new boolean[board.getWidth()][board.getHeight()];
@@ -40,7 +45,13 @@ public class BFSalgorithm {
         return recreatePath(previousCoordinates, this.board.getEnemySnake().getSnakeHead(), targetCoordinates);
     }
 
-    int[][] getDistancesMatrix(ArrayList<Coordinates> startingPoints) {
+    /***
+     * Creates a 2D matrix representing number of moves to reach every board tile by the snake or frog using BFS algorithm
+     * @param startingPoints list of starting points to calculate the number of moves from
+     * @param boardTile indicates whether the starting points are snakes or frogs
+     * @return 2D distances matrix
+     */
+    int[][] getDistancesMatrix(ArrayList<Coordinates> startingPoints, BoardTile boardTile) {
         boolean[][] visitedCoordinates = new boolean[this.board.getWidth()][this.board.getHeight()];
         Queue<Coordinates> boardCoordinatesQueue = new LinkedList<>();
         int[][] distancesMatrix = new int[this.board.getWidth()][this.board.getHeight()];
@@ -51,7 +62,7 @@ public class BFSalgorithm {
         }
         while (!boardCoordinatesQueue.isEmpty()) {
             Coordinates currentCoordinates = boardCoordinatesQueue.poll();
-            for (Coordinates neighbor : getNeighboringCoordinates(currentCoordinates, BoardTile.FROG)) {
+            for (Coordinates neighbor : getNeighboringCoordinates(currentCoordinates, boardTile)) {
                 if (!visitedCoordinates[neighbor.x][neighbor.y]) {
                     visitedCoordinates[neighbor.x][neighbor.y] = true;
                     distancesMatrix[neighbor.x][neighbor.y] = distancesMatrix[currentCoordinates.x][currentCoordinates.y] + 1;
@@ -73,6 +84,12 @@ public class BFSalgorithm {
         return distancesMatrix;
     }
 
+    /***
+     * Creates longest possible frog escape path using BFS algorithm
+     * @param frogMatrix 2D matrix of differences between snake and frog distances
+     * @param frog the frog for which the matrix is calculated
+     * @return longest possible frog escape path
+     */
     public ArrayList<Coordinates> getLongestFrogPath(int[][] frogMatrix, Frog frog) {
         Coordinates targetCoordinates = null;
         boolean[][] visitedCoordinates = new boolean[board.getWidth()][board.getHeight()];
@@ -97,6 +114,12 @@ public class BFSalgorithm {
         return recreatePath(previousCoordinates, startingPoint, targetCoordinates);
     }
 
+    /***
+     * Creates list of possible neighbors of a game object
+     * @param coordinates coordinates of the game object
+     * @param boardTile indicates the type of game object
+     * @return list of possible neighbors of a game object
+     */
     private ArrayList<Coordinates> getNeighboringCoordinates(Coordinates coordinates, BoardTile boardTile) {
         ArrayList<Coordinates> potentialNeighbors = new ArrayList<>();
         ArrayList<Coordinates> neighbors = new ArrayList<>();
@@ -113,6 +136,12 @@ public class BFSalgorithm {
         return neighbors;
     }
 
+    /***
+     * Checks if given coordinates meet the requirements to become snake/frog neighbors
+     * @param coordinates the coordinates being checked
+     * @param boardTile indicates whether we are looking for snake or frog neighbors
+     * @return true if the coordinates meet the requirements to become snake/frog neighbors and false if they don't
+     */
     public boolean areCoordinatesUnoccupiedAndInBounds(Coordinates coordinates, BoardTile boardTile) {
         boolean output = false;
         if (boardTile == BoardTile.ENEMY_SNAKE_HEAD) {
@@ -123,6 +152,11 @@ public class BFSalgorithm {
         return output;
     }
 
+    /***
+     * Checks if given coordinates meet the requirements to become snake neighbors
+     * @param coordinates the coordinates being checked
+     * @return true if the coordinates meet the requirements to become snake neighbors and false if they don't
+     */
     public boolean areCoordinatesUnoccupiedAndInBoundsForSnake(Coordinates coordinates) {
         ArrayList<BoardTile> obstacles = new ArrayList<>(List.of(
                 BoardTile.SNAKE, BoardTile.SNAKE_HEAD,
@@ -132,6 +166,11 @@ public class BFSalgorithm {
                 !obstacles.contains(this.boardTiles[coordinates.x][coordinates.y]);
     }
 
+    /***
+     * Checks if given coordinates meet the requirements to become frog neighbors
+     * @param coordinates the coordinates being checked
+     * @return true if the coordinates meet the requirements to become frog neighbors and false if they don't
+     */
     public boolean areCoordinatesUnoccupiedAndInBoundsForFrog(Coordinates coordinates) {
         ArrayList<BoardTile> obstacles = new ArrayList<>(List.of(
                 BoardTile.SNAKE, BoardTile.SNAKE_HEAD,
@@ -141,6 +180,13 @@ public class BFSalgorithm {
                 !obstacles.contains(this.boardTiles[coordinates.x][coordinates.y]);
     }
 
+    /***
+     * Recreates path from a list of previous coordinates
+     * @param previous list of previous coordinates
+     * @param startingCoordinates starting coordinates of the calculated path
+     * @param targetCoordinates target coordinates of the calculated path
+     * @return recreated path
+     */
     private ArrayList<Coordinates> recreatePath(Coordinates[][] previous, Coordinates startingCoordinates,
                                                 Coordinates targetCoordinates) {
         ArrayList<Coordinates> path = new ArrayList<>();
@@ -148,13 +194,17 @@ public class BFSalgorithm {
         path.add(currentCoordinates);
         while (currentCoordinates != startingCoordinates) {
             currentCoordinates = previous[currentCoordinates.x][currentCoordinates.y];
-//            currentCoordinates.print();
             path.add(currentCoordinates);
         }
         Collections.reverse(path);
         return path;
     }
 
+    /***
+     * Creates a 2D matrix of differences between snake and frog distances
+     * @param frog the frog for which the matrix is calculated
+     * @return 2D matrix of differences between snake and frog distances
+     */
     public int[][] createFrogMatrix(Frog frog) {
         ArrayList<Coordinates> snakeHeads = new ArrayList<>();
         try {
@@ -163,11 +213,11 @@ public class BFSalgorithm {
         } catch (Exception e) {
             snakeHeads.add(this.board.getPlayerSnake().getSnakeHead());
         }
-        int[][] snakeDistances = getDistancesMatrix(snakeHeads);
+        int[][] snakeDistances = getDistancesMatrix(snakeHeads, BoardTile.ENEMY_SNAKE_HEAD);
 
         ArrayList<Coordinates> frogList = new ArrayList<>();
         frogList.add(frog.getCoordinates());
-        int[][] frogDistances = getDistancesMatrix(frogList);
+        int[][] frogDistances = getDistancesMatrix(frogList, BoardTile.FROG);
         int[][] outputMatrix = new int[this.board.getWidth()][this.board.getHeight()];
 
         for (int i=0; i < this.board.getWidth(); i++) {

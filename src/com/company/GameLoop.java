@@ -5,10 +5,8 @@ import org.w3c.dom.events.Event;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.sql.Timestamp;
+import java.util.*;
 
 public class GameLoop extends Thread{
     final Board board;
@@ -106,7 +104,9 @@ public class GameLoop extends Thread{
         for (GameObjectThread gameObjectThread : this.gameObjectThreads) {
             gameObjectThread.start();
         }
-
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        long startTime = timestamp.getTime();
+        long stopTime;
         //render();
         while (!gameOver) {
             for (Frog frog : this.board.getMissingFrogs()) {
@@ -119,9 +119,14 @@ public class GameLoop extends Thread{
             for (GameObjectThread gameObjectThread : this.gameObjectThreads) {
                 gameObjectThread.startCalculatingNextAction();
             }
+
+            stopTime = timestamp.getTime();
+            long timeDifference = startTime - stopTime;
             try {
-                Thread.sleep(100);
+                Thread.sleep(Math.max(0, 100 - timeDifference));
             } catch (Exception e) { }
+            startTime = timestamp.getTime();
+
             //removeGameObjects();
             updateState();
             removeGameObjects();
