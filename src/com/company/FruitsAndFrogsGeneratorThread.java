@@ -12,7 +12,7 @@ public class FruitsAndFrogsGeneratorThread extends Thread implements GameObjectT
 
     FruitsAndFrogsGeneratorThread(Board board) {
         this.board = board;
-        this.fruitsAndFrogsGenerator = new FruitsAndFrogsGenerator(board, 2, 3);
+        this.fruitsAndFrogsGenerator = new FruitsAndFrogsGenerator(board, 3, 3);
     }
 
     @Override

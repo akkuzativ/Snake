@@ -55,7 +55,9 @@ public class GameLoop extends Thread{
 
     private void updateState() {
         for (GameObjectThread gameObjectThread : this.gameObjectThreads) {
-            gameObjectThread.performNextAction();
+            if (gameObjectThread.getRelatedGameObject() != null) {
+                gameObjectThread.performNextAction();
+            }
         }
         if (snake != null) {
             currentScore = snake.getSnakeBody().size() + 1;
@@ -79,6 +81,7 @@ public class GameLoop extends Thread{
         gameObjectsToRemove.removeIf(Objects::isNull);
         if (!gameObjectsToRemove.isEmpty()) {
             for (Collidable gameObject: gameObjectsToRemove) {
+                gameObjectThreads.removeIf( gameObjectThread -> gameObjectThread.getRelatedGameObject() == gameObject );
                 board.removeGameObject(gameObject);
             }
         }
@@ -86,7 +89,10 @@ public class GameLoop extends Thread{
     }
 
     private void cleanUpAndExit() {
-
+        for (GameObjectThread gameObjectThread: gameObjectThreads) {
+            gameObjectThread.forceKill();
+        }
+        gameObjectThreads.clear();
     }
 
     public void run() {
@@ -113,42 +119,17 @@ public class GameLoop extends Thread{
             for (GameObjectThread gameObjectThread : this.gameObjectThreads) {
                 gameObjectThread.startCalculatingNextAction();
             }
-            // !!!!!!!!!!!!!!!!!!!
-            // TODO
             try {
                 Thread.sleep(100);
             } catch (Exception e) { }
-            // !!!!!!!!!!!!!!!!!!!
-            removeGameObjects();
+            //removeGameObjects();
             updateState();
             removeGameObjects();
             render();
         }
-        for (GameObjectThread gameObjectThread: gameObjectThreads) {
-            if (gameObjectThread.getRelatedGameObject().getName().equals("Frog")) {
-                System.out.println(gameObjectThread.getRelatedGameObject());
-                System.out.println("------");
-            }
-        }
+        cleanUpAndExit();
 
-        for (GameObjectThread gameObjectThread: gameObjectThreads) {
-            gameObjectThread.forceKill();
-        }
 
-        for (GameObjectThread gameObjectThread: gameObjectThreads) {
-            try {
-                if (gameObjectThread.getRelatedGameObject().getName().equals("Frog")) {
-                    System.out.println(gameObjectThread.getRelatedGameObject());
-                    System.out.println("------");
-                }
-            }
-            catch (Exception e) {
-                System.out.println(gameObjectThread.getClass());
-            }
-
-        }
-
-        gameObjectThreads.clear();
         //ActionEvent gameOverEvent = new ActionEvent(this, ActionEvent.ACTION_FIRST, "GAME_OVER");
         //gameFrame.event
     }
