@@ -12,6 +12,12 @@ enum Direction {
 class IncorrectDirectionException extends Exception {}
 
  public class DirectionUtilities {
+
+     /***
+      * Creates an array of coordinate deltas based on the given direction
+      * @param direction given direction
+      * @return array of coordinate deltas
+      */
     public static int[] getDeltas(Direction direction) {
         int[] deltas = new int[2];
         switch (direction) {
@@ -23,6 +29,11 @@ class IncorrectDirectionException extends Exception {}
         return deltas;
     }
 
+     /***
+      * Returns a direction based on given coordinate deltas
+      * @param deltas coordinate deltas
+      * @return direction based on given coordinate deltas
+      */
     public static Direction getDirection(int[] deltas) {
         if (deltas[0] == 0 && deltas[1] == -1) {
             return Direction.UP;
@@ -35,12 +46,21 @@ class IncorrectDirectionException extends Exception {}
         }
     }
 
+     /***
+      * Gets a random direction from all directions
+      * @return random direction
+      */
      public static Direction getRandomDirection() {
          Random rand = new Random();
          Direction[] directions = Direction.values();
          return directions[rand.nextInt(directions.length)];
      }
 
+     /***
+      * Gets an opposite of the given direction
+      * @param direction given direction
+      * @return opposite of the given direction
+      */
      public static Direction getOppositeDirection(Direction direction) {
          return switch (direction) {
              case UP -> Direction.DOWN;
