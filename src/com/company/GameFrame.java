@@ -7,25 +7,33 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 
 public class GameFrame extends JFrame implements ActionListener {
-    final MenuPanel menuPanel = new MenuPanel(this);
-    final BoardPanel boardPanel = new BoardPanel(true);
-    final GameOverPanel gameOverPanel = new GameOverPanel(this);
-    final HighScorePanel highScorePanel = new HighScorePanel(this);
+    final MenuPanel menuPanel;
+    final BoardPanel boardPanel;
+    final GameOverPanel gameOverPanel;
+    final HighScorePanel highScorePanel;
     Board board;
     GameLoop gameLoop;
-    String highScoreFileName = "HighScore.txt";
-    HighScore highScoreRecords = new HighScore();
+    HighScore highScoreRecords = new HighScore("HighScore.txt");
 
     GameFrame(Dimension size) {
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(size);
+        setMinimumSize(size);
+
+        setTitle("Snake");
+
+        menuPanel = new MenuPanel(this);
+        boardPanel = new BoardPanel(true);
+        gameOverPanel = new GameOverPanel(this);
+        highScorePanel = new HighScorePanel(this);
+
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
         JPanel[] panels = {menuPanel, boardPanel, gameOverPanel, highScorePanel};
         for (JPanel panel: panels) {
             panel.setVisible(true);
         }
         setContentPane(menuPanel);
-        highScoreRecords.readFromFile(highScoreFileName);
+        highScoreRecords.readFromFile();
     }
 
     @Override
@@ -35,7 +43,7 @@ public class GameFrame extends JFrame implements ActionListener {
             case "START":
                 try {
                     int fruitCount = 3;
-                    int frogCount = 1;
+                    int frogCount = 3;
                     BoardGenerator boardGenerator = new BoardGenerator(50, 50, fruitCount, frogCount,2,
                                                           10, 20, 3);
                     board = boardGenerator.generateBoard();
@@ -51,7 +59,9 @@ public class GameFrame extends JFrame implements ActionListener {
                 break;
             case "HIGH_SCORE":
                 panelToDisplay = highScorePanel;
-                highScoreRecords.writeToFile(highScoreFileName);
+                highScoreRecords.readFromFile();
+                highScorePanel.reset();
+                highScorePanel.setHighScoreRecords(highScoreRecords);
                 break;
             case "QUIT":
                 dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
@@ -60,8 +70,10 @@ public class GameFrame extends JFrame implements ActionListener {
                 panelToDisplay = menuPanel;
                 break;
             case "GAME_OVER":
-                System.out.println("koniec");
                 panelToDisplay = gameOverPanel;
+                gameOverPanel.reset();
+                gameOverPanel.setHighScoreRecords(highScoreRecords);
+                gameOverPanel.setScore(gameLoop.getLastScore());
                 break;
             default:
         }

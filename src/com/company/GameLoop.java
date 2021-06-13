@@ -49,6 +49,12 @@ public class GameLoop extends Thread{
 
         this.snakeAI = new SnakeAI(board, this.enemySnake);
         this.frogAI = new FrogAI(board, frogs.get(0));
+
+        this.currentScore = 0;
+    }
+
+    public int getLastScore() {
+        return currentScore;
     }
 
     private void updateState() {
@@ -58,7 +64,7 @@ public class GameLoop extends Thread{
             }
         }
         if (snake != null) {
-            currentScore = snake.getSnakeBody().size() + 1;
+            currentScore = snake.getSnakeBody().size() + 1 - 3;
         }
         if (board.getPlayerSnake() == null) {
             gameOver = true;
@@ -91,6 +97,7 @@ public class GameLoop extends Thread{
             gameObjectThread.forceKill();
         }
         gameObjectThreads.clear();
+        gameFrame.actionPerformed(new ActionEvent(gameFrame, ActionEvent.ACTION_PERFORMED, "GAME_OVER"));
     }
 
     public void run() {
@@ -107,7 +114,6 @@ public class GameLoop extends Thread{
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         long startTime = timestamp.getTime();
         long stopTime;
-        //render();
         while (!gameOver) {
             for (Frog frog : this.board.getMissingFrogs()) {
                 GameObjectThread gameObjectThread = new FrogThread(this.board, frog);
@@ -127,15 +133,10 @@ public class GameLoop extends Thread{
             } catch (Exception e) { }
             startTime = timestamp.getTime();
 
-            //removeGameObjects();
             updateState();
             removeGameObjects();
             render();
         }
         cleanUpAndExit();
-
-
-        //ActionEvent gameOverEvent = new ActionEvent(this, ActionEvent.ACTION_FIRST, "GAME_OVER");
-        //gameFrame.event
     }
 }

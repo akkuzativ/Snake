@@ -2,7 +2,6 @@ package com.company;
 
 import java.util.ArrayList;
 import java.io.*;
-import java.util.Collections;
 import java.util.Comparator;
 
 public class HighScore {
@@ -38,6 +37,11 @@ public class HighScore {
     }
 
     private ArrayList<HighScoreRecord> records = new ArrayList<>();
+    private String saveFileName;
+
+    HighScore(String saveFileName) {
+        this.saveFileName = saveFileName;
+    }
 
     public ArrayList<HighScoreRecord> getRecords() {
         return records;
@@ -48,7 +52,8 @@ public class HighScore {
         records.sort(Comparator.comparingInt(HighScoreRecord::getScore).reversed());
     }
 
-    public void readFromFile(String filename) {
+    public void readFromFile() {
+        String filename = saveFileName;
         File inputFile = new File(filename).getAbsoluteFile();
         FileInputStream inputStream;
 ;        try {
@@ -61,6 +66,8 @@ public class HighScore {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 
         String line;
+
+        ArrayList<HighScoreRecord> readRecords = new ArrayList<>();
 
         do {
             try {
@@ -79,9 +86,11 @@ public class HighScore {
             String name = possibleRecord[0];
             int score = Integer.parseInt(possibleRecord[1]);
             HighScoreRecord highScoreRecord = new HighScoreRecord(name, score);
-            records.add(highScoreRecord);
+            readRecords.add(highScoreRecord);
 
         } while (line != null);
+
+        records = readRecords;
 
         if (!records.isEmpty()) {
             records.sort(Comparator.comparingInt(HighScoreRecord::getScore).reversed());
@@ -94,7 +103,8 @@ public class HighScore {
         catch (IOException e) {}
     }
 
-    public void writeToFile(String filename){
+    public void writeToFile() {
+        String filename = saveFileName;
         File outputFile = new File(filename);
         FileOutputStream outputStream;
         if (!outputFile.exists()) {
@@ -102,6 +112,7 @@ public class HighScore {
                 outputFile.createNewFile();
             }
             catch (Exception e) {
+                System.out.println("Failed to save score");
                 return;
             }
         }
@@ -109,6 +120,7 @@ public class HighScore {
             outputStream = new FileOutputStream(outputFile, false);
         }
         catch (Exception e) {
+            System.out.println("Failed to save score");
             return;
         }
 
