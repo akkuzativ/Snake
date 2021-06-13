@@ -46,7 +46,7 @@ public class PlayerSnakeThread extends Thread implements GameObjectThread {
                 this.canCalculateNextAction = false;
             }
             try {
-                Thread.sleep(5);
+                Thread.sleep(1);
             } catch (Exception e) {
             }
         }

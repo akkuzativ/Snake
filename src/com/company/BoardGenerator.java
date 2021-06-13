@@ -130,16 +130,28 @@ public class BoardGenerator {
         return generatedBoard;
     }
 
+    /***
+     * Checks whether given coordinates are not in board bounds with margins
+     * @param coordinates the coordinates being checked
+     * @param margin given margin
+     * @return true if given coordinates are not in bounds and true if they are
+     */
     private boolean areCoordinatesNotInBounds(Coordinates coordinates, int margin) {
         return coordinates.x < margin || coordinates.x >= this.boardWidth - margin ||
                 coordinates.y < margin || coordinates.y >= this.boardHeight - margin;
     }
 
+    /***
+     * Checks if all line segment coordinates are in board bounds with margins
+     * @param startingPoint starting point of generated line segment
+     * @param endPoint end point of generated line segment
+     * @param margin given margin
+     * @return true if all line segment coordinates are in board bounds with margins and false if they aren't
+     */
     private boolean areAllCoordinatesFree(Coordinates startingPoint, Coordinates endPoint, int margin) {
         if (areCoordinatesNotInBounds(startingPoint, margin) || areCoordinatesNotInBounds(endPoint, margin)) {
             return false;
         }
-
         for (int i = Math.min(startingPoint.x, endPoint.x) - margin; i <= Math.max(startingPoint.x, endPoint.x) + margin; i++) {
             for (int j = Math.min(startingPoint.y, endPoint.y) - margin; j <= Math.max(startingPoint.y, endPoint.y) + margin; j++) {
                 if (this.occupiedTiles[i][j]) {
@@ -150,6 +162,12 @@ public class BoardGenerator {
         return true;
     }
 
+    /***
+     * Generates a line segment of given length on an unoccupied board space
+     * @param segmentLength generated line segment length
+     * @param direction generated line segment direction
+     * @return generated line segment
+     */
     private ArrayList<Coordinates> generateLineSegment(int segmentLength, Direction direction) {
         ArrayList<Coordinates> outputCoordinates = new ArrayList<>();
         int[] deltas = DirectionUtilities.getDeltas(direction);
