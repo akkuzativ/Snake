@@ -15,6 +15,9 @@ public class FruitsAndFrogsGeneratorThread extends Thread implements GameObjectT
         this.fruitsAndFrogsGenerator = new FruitsAndFrogsGenerator(board, 3, 3);
     }
 
+    /***
+     * Generates missing fruits and frogs lists when the flag is set
+     */
     @Override
     public void run() {
         while(true) {
@@ -33,22 +36,36 @@ public class FruitsAndFrogsGeneratorThread extends Thread implements GameObjectT
         }
     }
 
+    /***
+     * Sets the flag that allows the thread to calculate its next action
+     */
     @Override
     public void startCalculatingNextAction() {
         this.canCalculateNextAction = true;
     }
 
+    /***
+     * Sets missing frogs list and places missing fruits and frogs on the board
+     */
     @Override
     public void performNextAction() {
         this.board.setMissingFrogs(this.missingFrogs);
         this.fruitsAndFrogsGenerator.generateFruitsAndFrogs(this.missingFruits, this.missingFrogs);
     }
 
+    /***
+     * Returns game object threads to be removed
+     * @return game object threads to be removed
+     */
     @Override
     public ArrayList<Collidable> getGameObjectsToRemove() {
         return new ArrayList<>();
     }
 
+    /***
+     * Returns the related game object
+     * @return related game object
+     */
     @Override
     public Collidable getRelatedGameObject() {
         return new Collidable() {
@@ -59,6 +76,9 @@ public class FruitsAndFrogsGeneratorThread extends Thread implements GameObjectT
         };
     }
 
+    /***
+     * Sets thread kill flag to true
+     */
     @Override
     public void forceKill() {
         killed = true;

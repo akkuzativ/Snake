@@ -17,6 +17,9 @@ public class EnemySnakeThread extends Thread implements GameObjectThread{
         this.snakeController = new SnakeController(board, board.getEnemySnake());
     }
 
+    /***
+     * Calculates next enemy snake action using BFS algorithm when the flag is set
+     */
     @Override
     public void run() {
         while (true) {
@@ -34,11 +37,17 @@ public class EnemySnakeThread extends Thread implements GameObjectThread{
         }
     }
 
+    /***
+     * Sets the flag that allows the thread to calculate its next action
+     */
     @Override
     public void startCalculatingNextAction() {
         this.canCalculateNextAction = true;
     }
 
+    /***
+     * Sets next move direction for the enemy snake and handles possible collisions
+     */
     @Override
     public void performNextAction() {
         try {
@@ -49,16 +58,27 @@ public class EnemySnakeThread extends Thread implements GameObjectThread{
         gameObjectsToRemove = snakeController.handleCollisions();
     }
 
+    /***
+     * Returns game object threads to be removed
+     * @return game object threads to be removed
+     */
     @Override
     public ArrayList<Collidable> getGameObjectsToRemove() {
         return gameObjectsToRemove;
     }
 
+    /***
+     * Returns the enemy snake
+     * @return enemy snake
+     */
     @Override
     public Collidable getRelatedGameObject() {
         return board.getEnemySnake();
     }
 
+    /***
+     * Sets thread kill flag to true
+     */
     @Override
     public void forceKill() {
         killed = true;

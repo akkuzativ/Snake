@@ -17,6 +17,9 @@ public class FrogThread extends Thread implements GameObjectThread {
         this.frog = frog;
     }
 
+    /***
+     * Calculates next frog action using BFS algorithm when the flag is set
+     */
     @Override
     public void run() {
         while (true) {
@@ -35,11 +38,17 @@ public class FrogThread extends Thread implements GameObjectThread {
         }
     }
 
+    /***
+     * Sets the flag that allows the thread to calculate its next action
+     */
     @Override
     public void startCalculatingNextAction() {
         this.canCalculateNextAction = true;
     }
 
+    /***
+     * Sets next move direction for the frog and handles possible collisions
+     */
     @Override
     public void performNextAction() {
         this.frog.setMoveDirection(this.nextAction);
@@ -47,16 +56,27 @@ public class FrogThread extends Thread implements GameObjectThread {
         gameObjectsToRemove = FrogController.handleCollisions(frog, board);
     }
 
+    /***
+     * Returns game object threads to be removed
+     * @return game object threads to be removed
+     */
     @Override
     public ArrayList<Collidable> getGameObjectsToRemove() {
         return gameObjectsToRemove;
     }
 
+    /***
+     * Returns current frog
+     * @return current frog
+     */
     @Override
     public Collidable getRelatedGameObject() {
         return frog;
     }
 
+    /***
+     * Sets thread kill flag to true
+     */
     @Override
     public void forceKill() {
         killed = true;

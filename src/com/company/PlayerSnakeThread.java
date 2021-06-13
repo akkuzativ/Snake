@@ -19,6 +19,9 @@ public class PlayerSnakeThread extends Thread implements GameObjectThread {
         this.keyboardHandler = keyboardHandler;
     }
 
+    /***
+     * Handles keyboard input when the flag is set
+     */
     @Override
     public void run() {
         while (true) {
@@ -52,11 +55,17 @@ public class PlayerSnakeThread extends Thread implements GameObjectThread {
         }
     }
 
+    /***
+     * Sets the flag that allows the thread to calculate its next action
+     */
     @Override
     public void startCalculatingNextAction() {
         this.canCalculateNextAction = true;
     }
 
+    /***
+     * Sets next move direction for the player snake and handles possible collisions
+     */
     @Override
     public void performNextAction() {
         try {
@@ -68,16 +77,27 @@ public class PlayerSnakeThread extends Thread implements GameObjectThread {
         gameObjectsToRemove = snakeController.handleCollisions();
     }
 
+    /***
+     * Returns game object threads to be removed
+     * @return game object threads to be removed
+     */
     @Override
     public ArrayList<Collidable> getGameObjectsToRemove() {
         return gameObjectsToRemove;
     }
 
+    /***
+     * Returns the player snake
+     * @return player snake
+     */
     @Override
     public Collidable getRelatedGameObject() {
         return board.getPlayerSnake();
     }
 
+    /***
+     * Sets thread kill flag to true
+     */
     @Override
     public void forceKill() {
         killed = true;
