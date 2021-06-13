@@ -43,7 +43,7 @@ public class GameFrame extends JFrame implements ActionListener {
             case "START":
                 try {
                     int fruitCount = 3;
-                    int frogCount = 1;
+                    int frogCount = 3;
                     BoardGenerator boardGenerator = new BoardGenerator(50, 50, fruitCount, frogCount,2,
                                                           10, 20, 3);
                     board = boardGenerator.generateBoard();

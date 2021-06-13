@@ -29,10 +29,22 @@ public class BoardGenerator {
         this.snakeLength = snakeLength;
     }
 
-    private void markCoordinatesAsOccupied(Coordinates coordinate) {
-        this.occupiedTiles[coordinate.x][coordinate.y] = true;
+    /***
+     * Marks given coordinates as occupied on the occupiedTiles list
+     * @param coordinates coordinates to be marked as occupied
+     */
+    private void markCoordinatesAsOccupied(Coordinates coordinates) {
+        this.occupiedTiles[coordinates.x][coordinates.y] = true;
     }
 
+    /***
+     * Generates random unoccupied coordinates in given bounds
+     * @param minX minimum width bound
+     * @param maxX maximum width bound
+     * @param minY minimum height bound
+     * @param maxY maximum height bound
+     * @return random unoccupied coordinates in given bounds
+     */
     private Coordinates generateUnoccupiedCoordinates(int minX, int maxX, int minY, int maxY) {
         int xCoordinate = minX + this.rand.nextInt(maxX - minX);
         int yCoordinate = minY + this.rand.nextInt(maxY - minY);
@@ -44,20 +56,40 @@ public class BoardGenerator {
         return new Coordinates(xCoordinate, yCoordinate);
     }
 
+    /***
+     * Generates random unoccupied coordinates in board bounds
+     * @return random unoccupied coordinates in board bounds
+     */
     private Coordinates generateUnoccupiedCoordinates() {
         return generateUnoccupiedCoordinates(0, this.boardWidth, 0, this.boardHeight);
     }
 
+    /***
+     * Generates random unoccupied coordinates in given bounds and marks them as occupied on the occupiedTiles list
+     * @param minX minimum width bound
+     * @param maxX maximum width bound
+     * @param minY minimum height bound
+     * @param maxY maximum height bound
+     * @return random unoccupied coordinates in given bounds
+     */
     private Coordinates generateUnoccupiedCoordinatesAndMarkAsOccupied(int minX, int maxX, int minY, int maxY) {
         Coordinates coordinates = generateUnoccupiedCoordinates(minX, maxX, minY, maxY);
         markCoordinatesAsOccupied(coordinates);
         return coordinates;
     }
 
+    /***
+     * Generates random unoccupied coordinates in board bounds and marks them as occupied on the occupiedTiles list
+     * @return random unoccupied coordinates in board bounds
+     */
     private Coordinates generateUnoccupiedCoordinatesAndMarkAsOccupied() {
         return generateUnoccupiedCoordinatesAndMarkAsOccupied(0, this.boardWidth, 0, this.boardHeight);
     }
 
+    /***
+     * Generates a new snake on an unoccupied board tile
+     * @return generated snake
+     */
     private Snake generateSnake() {
         Direction snakeDirection = DirectionUtilities.getRandomDirection();
         ArrayList<Coordinates> snakeSegment = generateLineSegment(this.snakeLength, snakeDirection);
@@ -69,6 +101,11 @@ public class BoardGenerator {
         return new Snake(snakeSegment, snakeHead, DirectionUtilities.getOppositeDirection(snakeDirection));
     }
 
+    /***
+     * Generates the whole starting board with fruits, frogs, obstacles and snakes
+     * @return generated starting board
+     * @throws TileOutOfBoundsException when added game object are out of board bounds
+     */
     public Board generateBoard() throws TileOutOfBoundsException {
         Board generatedBoard = new Board(this.boardWidth, this.boardHeight);
 
